@@ -21,8 +21,8 @@ public class BlogController {
     private BlogService blogService;
 
     @PostMapping("/{appUserId}")
-    public ResponseEntity<BlogReadDto> createBlog(@PathVariable Long appUserId,  @RequestBody BlogCreateDto blogCreateDto) {
+    public ResponseEntity<BlogReadDto> createBlog(@PathVariable Long appUserId,
+        @Valid @RequestBody BlogCreateDto blogCreateDto) {
         return new ResponseEntity<>(blogService.createBlog(appUserId, blogCreateDto), HttpStatus.CREATED);
-
     }
 }
