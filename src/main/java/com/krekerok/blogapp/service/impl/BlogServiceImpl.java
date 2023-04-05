@@ -4,6 +4,7 @@ import com.krekerok.blogapp.dto.requests.BlogCreateDto;
 import com.krekerok.blogapp.dto.responses.BlogReadDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Blog;
+import com.krekerok.blogapp.exception.BlogExistsException;
 import com.krekerok.blogapp.repository.BlogRepository;
 import com.krekerok.blogapp.service.AppUserService;
 import com.krekerok.blogapp.service.BlogService;
@@ -22,17 +23,19 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BlogReadDto createBlog(Long appUserId, BlogCreateDto blogCreateDto) {
         AppUser appUser = appUserService.findAppUserByAppUserId(appUserId);
-        Blog blog = Blog.builder()
-            .blogName(blogCreateDto.getBlogName())
-            .createdAt(Instant.now())
-            .modifiedAt(Instant.now())
-            .build();
-        appUser.setBlog(blog);
-        AppUser appUser1 = appUserService.saveBlogToTheAppUser(appUser);
-        return BlogReadDto.builder()
-            .blogId(appUser1.getBlog().getBlogId())
-            .blogName(blogCreateDto.getBlogName())
-            .createdAt(appUser1.getBlog().getCreatedAt())
-            .build();
+
+        if (appUser.getBlog() == null) {
+            Blog blog = Blog.builder().blogName(blogCreateDto.getBlogName())
+                .createdAt(Instant.now()).modifiedAt(Instant.now()).build();
+            appUser.setBlog(blog);
+            AppUser appUser1 = appUserService.saveBlogToTheAppUser(appUser);
+            return BlogReadDto.builder()
+                .blogId(appUser1.getBlog().getBlogId())
+                .blogName(blogCreateDto.getBlogName())
+                .createdAt(appUser1.getBlog().getCreatedAt())
+                .build();
+        } else {
+            throw new BlogExistsException("User cannot have more than one blog.");
+        }
     }
 }

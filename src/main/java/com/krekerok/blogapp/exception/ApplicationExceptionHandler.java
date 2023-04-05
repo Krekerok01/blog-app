@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ApplicationExceptionHandler {
 
-    @ExceptionHandler(
-        FieldExistsException.class)
+    @ExceptionHandler({
+        FieldExistsException.class,
+        BlogExistsException.class})
     public ResponseEntity<ExceptionDto> handleApplicationException(RuntimeException e) {
         return new ResponseEntity<>(
             new ExceptionDto(e.getMessage(), HttpStatus.BAD_REQUEST.value(),
