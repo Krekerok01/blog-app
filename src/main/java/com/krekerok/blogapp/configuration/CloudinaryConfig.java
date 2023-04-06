@@ -3,15 +3,21 @@ package com.krekerok.blogapp.configuration;
 import com.cloudinary.Cloudinary;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CloudinaryConfig {
 
-    private final String CLOUD_NAME = "dor96itdg";
-    private final String API_KEY = "259373515337985";
-    private final String API_SECRET = "zE8udXENFpVLUSQtAl0kWKOcx5U";
+    @Value("${cloudinary.cloud.name}")
+    private String CLOUD_NAME;
+
+    @Value("${cloudinary.api.key}")
+    private String API_KEY;
+
+    @Value("${cloudinary.api.secret}")
+    private String API_SECRET;
 
     @Bean
     public Cloudinary cloudinary(){

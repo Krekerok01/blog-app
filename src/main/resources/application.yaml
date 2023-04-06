@@ -40,3 +40,10 @@ spring:
 app:
   jwtSecret: ${APP_JWT_SECRET}
   jwtExpirationMs: 86400000
+
+cloudinary:
+  cloud:
+    name: ${CLOUD_NAME}
+  api:
+    key: ${API_KEY}
+    secret: ${API_SECRET}
