@@ -5,6 +5,7 @@ import com.krekerok.blogapp.dto.responses.BlogReadDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.exception.BlogExistsException;
+import com.krekerok.blogapp.exception.BlogNotFoundException;
 import com.krekerok.blogapp.repository.BlogRepository;
 import com.krekerok.blogapp.service.AppUserService;
 import com.krekerok.blogapp.service.BlogService;
@@ -37,5 +38,10 @@ public class BlogServiceImpl implements BlogService {
         } else {
             throw new BlogExistsException("User cannot have more than one blog.");
         }
+    }
+
+    @Override
+    public Blog findBlogById(Long blogId) {
+        return blogRepository.findById(blogId).orElseThrow(() -> new BlogNotFoundException("Blog not found"));
     }
 }

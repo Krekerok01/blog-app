@@ -35,6 +35,8 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 
 	implementation 'org.liquibase:liquibase-core:4.19.0'
+
+	implementation group: 'com.cloudinary', name: 'cloudinary-http44', version: '1.32.2'
 }
 
 tasks.named('test') {
