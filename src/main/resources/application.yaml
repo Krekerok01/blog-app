@@ -11,7 +11,9 @@ spring:
         smtp:
           auth: true
 
-
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
 
   config:
     import: optional:file:.env[.properties]
@@ -26,7 +28,7 @@ spring:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
 
   redis:
     database: 0
