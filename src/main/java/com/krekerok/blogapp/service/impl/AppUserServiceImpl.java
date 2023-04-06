@@ -4,6 +4,7 @@ import com.krekerok.blogapp.configuration.jwt.JwtUtils;
 import com.krekerok.blogapp.configuration.user_details.UserDetailsImpl;
 import com.krekerok.blogapp.dto.requests.AppUserLoginDto;
 import com.krekerok.blogapp.dto.responses.AppUserLoginReadDto;
+import com.krekerok.blogapp.dto.responses.AppUserReadDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.RedisUser;
 import com.krekerok.blogapp.entity.Role;
@@ -13,7 +14,9 @@ import com.krekerok.blogapp.exception.UserNotFoundException;
 import com.krekerok.blogapp.repository.AppUserRepository;
 import com.krekerok.blogapp.service.AppUserService;
 import com.krekerok.blogapp.service.RoleService;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -93,5 +96,23 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public AppUser saveBlogToTheAppUser(AppUser appUser) {
         return appUserRepository.save(appUser);
+    }
+
+    @Override
+    public List<AppUserReadDto> findAll() {
+        List<AppUser> users = appUserRepository.findAll();
+
+        if (!users.isEmpty()) {
+            return users.stream().map(user ->
+                AppUserReadDto.builder()
+                    .id(user.getUserId())
+                    .username(user.getUsername())
+                    .email(user.getEmail())
+                    .createdAt(user.getCreatedAt())
+                    .build()
+            ).collect(Collectors.toList());
+        } else {
+            throw new UserNotFoundException("There are no users in the database");
+        }
     }
 }
