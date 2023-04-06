@@ -115,4 +115,15 @@ public class AppUserServiceImpl implements AppUserService {
             throw new UserNotFoundException("There are no users in the database");
         }
     }
+
+    @Override
+    public boolean deleteAppUserById(long id) {
+        return appUserRepository.findById(id)
+            .map(entity -> {
+                appUserRepository.delete(entity);
+                appUserRepository.flush();
+                return true;
+            })
+            .orElse(false);
+    }
 }

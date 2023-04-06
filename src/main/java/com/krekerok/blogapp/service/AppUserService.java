@@ -20,4 +20,6 @@ public interface AppUserService {
     AppUser saveBlogToTheAppUser(AppUser appUser);
 
     List<AppUserReadDto> findAll();
+
+    boolean deleteAppUserById(long id);
 }
