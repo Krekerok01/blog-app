@@ -31,6 +31,8 @@ public class PostController {
             content = @Content),
         @ApiResponse(responseCode = "400", description = "Error: Validation errors",
             content = @Content),
+        @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
+            content = @Content),
         @ApiResponse(responseCode = "404", description = "Error: Blog not found",
             content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")

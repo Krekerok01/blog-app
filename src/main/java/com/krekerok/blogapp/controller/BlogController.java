@@ -37,6 +37,8 @@ public class BlogController {
             }),
         @ApiResponse(responseCode = "400", description = "Error: Validation errors or creating more than one blog",
             content = @Content),
+        @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
+            content = @Content),
         @ApiResponse(responseCode = "404", description = "Error: User not found",
             content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")
