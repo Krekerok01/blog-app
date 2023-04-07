@@ -1,6 +1,11 @@
 package com.krekerok.blogapp.controller;
 
 import com.krekerok.blogapp.service.PostService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +25,15 @@ public class PostController {
     @Autowired
     private PostService postService;
 
+    @Operation(summary = "Post creating", description = "Create post and save it to the database. The post ID will be returned.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Post created successfully",
+            content = @Content),
+        @ApiResponse(responseCode = "400", description = "Error: Validation errors",
+            content = @Content),
+        @ApiResponse(responseCode = "404", description = "Error: Blog not found",
+            content = @Content)})
+    @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/{blogId}")
     public ResponseEntity<Long> createPost(@PathVariable Long blogId, @RequestParam("imageFile") MultipartFile file,
         @NotBlank @Size(max = 60) @RequestParam("header") String header,
