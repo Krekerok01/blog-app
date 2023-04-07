@@ -6,6 +6,7 @@ import com.krekerok.blogapp.dto.requests.AppUserLoginDto;
 import com.krekerok.blogapp.dto.responses.AppUserLoginReadDto;
 import com.krekerok.blogapp.dto.responses.AppUserReadDto;
 import com.krekerok.blogapp.entity.AppUser;
+import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.RedisUser;
 import com.krekerok.blogapp.entity.Role;
 import com.krekerok.blogapp.entity.RoleName;
@@ -125,5 +126,19 @@ public class AppUserServiceImpl implements AppUserService {
                 return true;
             })
             .orElse(false);
+    }
+
+    @Override
+    public boolean checkingForDataCompliance(Long blogId, String jwt) {
+        AppUser appUser = appUserRepository.findByUsername
+            (jwtUtils.getUserNameFromJwtToken(jwt)).orElseThrow(() -> new UserNotFoundException("User not found"));
+        return appUser.getBlog().getBlogId() == blogId;
+    }
+
+    @Override
+    public void deleteLinkToTheBlog(Blog blog) {
+        AppUser appUser = appUserRepository.findAppUserByBlog(blog);
+        appUser.setBlog(null);
+        appUserRepository.save(appUser);
     }
 }

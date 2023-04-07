@@ -6,12 +6,14 @@ import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.exception.BlogExistsException;
 import com.krekerok.blogapp.exception.BlogNotFoundException;
+import com.krekerok.blogapp.exception.NoBlogIdMatchException;
 import com.krekerok.blogapp.repository.BlogRepository;
 import com.krekerok.blogapp.service.AppUserService;
 import com.krekerok.blogapp.service.BlogService;
 import java.time.Instant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BlogServiceImpl implements BlogService {
@@ -43,5 +45,17 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public Blog findBlogById(Long blogId) {
         return blogRepository.findById(blogId).orElseThrow(() -> new BlogNotFoundException("Blog not found"));
+    }
+
+    @Override
+    @Transactional
+    public void deleteBlogById(long id, String jwt) {
+        Blog blog = blogRepository.findById(id).orElseThrow(() -> new BlogNotFoundException("Blog not found"));
+        if (appUserService.checkingForDataCompliance(blog.getBlogId(), jwt)){
+            appUserService.deleteLinkToTheBlog(blog);
+            blogRepository.deleteById(id);
+        } else {
+            throw new NoBlogIdMatchException("Invalid blog id");
+        }
     }
 }

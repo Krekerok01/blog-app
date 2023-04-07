@@ -9,4 +9,6 @@ public interface BlogService {
     BlogReadDto createBlog(Long appUserId, BlogCreateDto blogCreateDto);
 
     Blog findBlogById(Long blogId);
+
+    void deleteBlogById(long id, String jwt);
 }
