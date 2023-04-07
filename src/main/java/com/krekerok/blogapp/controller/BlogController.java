@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -66,5 +67,25 @@ public class BlogController {
     public ResponseEntity<?> deleteAppUser(@PathVariable long id, HttpServletRequest request) {
         blogService.deleteBlogById(id, request.getHeader("Authorization").substring(7));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Operation(summary = "Blog updating", description = "Updating(changing) blog name")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully updated",
+            content = {
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = BlogReadDto.class))
+            }),
+        @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
+            content = @Content),
+        @ApiResponse(responseCode = "404", description = "Error: User or blog not found",
+            content = @Content)})
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PatchMapping("/{blogId}")
+    public ResponseEntity<BlogReadDto> updateBlog(@PathVariable long blogId,
+        @Valid @RequestBody BlogCreateDto blogCreateDto, HttpServletRequest request){
+        return new ResponseEntity<>(blogService
+            .updateBlog(blogId, blogCreateDto, request.getHeader("Authorization").substring(7)), HttpStatus.OK);
     }
 }

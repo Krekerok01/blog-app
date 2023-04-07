@@ -58,4 +58,21 @@ public class BlogServiceImpl implements BlogService {
             throw new NoBlogIdMatchException("Invalid blog id");
         }
     }
+
+    @Override
+    public BlogReadDto updateBlog(long blogId, BlogCreateDto blogCreateDto, String jwt) {
+        Blog blog = blogRepository.findById(blogId).orElseThrow(() -> new BlogNotFoundException("Blog not found"));
+        if (appUserService.checkingForDataCompliance(blog.getBlogId(), jwt)){
+            blog.setBlogName(blogCreateDto.getBlogName());
+            blog.setModifiedAt(Instant.now());
+            Blog updatedBlog = blogRepository.save(blog);
+            return BlogReadDto.builder()
+                .blogId(updatedBlog.getBlogId())
+                .blogName(updatedBlog.getBlogName())
+                .createdAt(updatedBlog.getCreatedAt())
+                .build();
+        } else {
+            throw new NoBlogIdMatchException("Invalid blog id");
+        }
+    }
 }

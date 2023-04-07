@@ -11,4 +11,6 @@ public interface BlogService {
     Blog findBlogById(Long blogId);
 
     void deleteBlogById(long id, String jwt);
+
+    BlogReadDto updateBlog(long blogId, BlogCreateDto blogCreateDto, String jwt);
 }
