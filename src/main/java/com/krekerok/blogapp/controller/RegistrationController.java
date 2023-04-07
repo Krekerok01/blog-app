@@ -28,7 +28,7 @@ public class RegistrationController {
         return new ResponseEntity<>(redisService.registerUser(appUserCreateDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/verify/{activationCode}")
+    @PostMapping("/verify/{activationCode}")
     public ResponseEntity<?> verifyUser(@PathVariable String activationCode, @RequestParam String email) {
         redisService.verifyUser(email, activationCode);
         return new ResponseEntity<>(HttpStatus.OK);
