@@ -19,7 +19,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    private long id;
+    private Long id;
     private String username;
     @JsonIgnore
     private String password;

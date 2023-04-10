@@ -1,6 +1,8 @@
 package com.krekerok.blogapp.dto.responses;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.Value;
 
 @Value
@@ -9,7 +11,8 @@ public class AppUserLoginResponseDto {
 
     String token;
     String type = "Bearer";
-    long userId;
+    Long userId;
+    Long blogId;
     String username;
     String email;
 }

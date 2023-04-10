@@ -46,11 +46,16 @@ public class AppUserServiceImpl implements AppUserService {
         String jwt = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
+        AppUser appUser = appUserRepository
+            .findById(userDetails.getId()).orElseThrow(() -> new UserNotFoundException("User not found"));
+        Long blogId = appUser.getBlog() != null ? appUser.getBlog().getBlogId() : null;
+
         return AppUserLoginResponseDto.builder()
             .token(jwt)
             .userId(userDetails.getId())
             .username(userDetails.getUsername())
             .email(userDetails.getEmail())
+            .blogId(blogId)
             .build();
     }
 
