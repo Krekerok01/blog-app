@@ -12,6 +12,7 @@ import com.krekerok.blogapp.entity.Role;
 import com.krekerok.blogapp.entity.RoleName;
 import com.krekerok.blogapp.exception.FieldExistsException;
 import com.krekerok.blogapp.exception.UserNotFoundException;
+import com.krekerok.blogapp.mapper.AppUserMapper;
 import com.krekerok.blogapp.repository.AppUserRepository;
 import com.krekerok.blogapp.service.AppUserService;
 import com.krekerok.blogapp.service.RoleService;
@@ -103,14 +104,9 @@ public class AppUserServiceImpl implements AppUserService {
         List<AppUser> users = appUserRepository.findAll();
 
         if (!users.isEmpty()) {
-            return users.stream().map(user ->
-                AppUserResponseDto.builder()
-                    .id(user.getUserId())
-                    .username(user.getUsername())
-                    .email(user.getEmail())
-                    .createdAt(user.getCreatedAt())
-                    .build()
-            ).collect(Collectors.toList());
+            return users.stream()
+                .map(user -> AppUserMapper.INSTANCE.toAppUserResponseDto(user))
+                .collect(Collectors.toList());
         } else {
             throw new UserNotFoundException("There are no users in the database");
         }
@@ -131,7 +127,7 @@ public class AppUserServiceImpl implements AppUserService {
     public boolean checkingForDataCompliance(Long blogId, String jwt) {
         AppUser appUser = appUserRepository.findByUsername
             (jwtUtils.getUserNameFromJwtToken(jwt)).orElseThrow(() -> new UserNotFoundException("User not found"));
-        return appUser.getBlog().getBlogId() == blogId;
+        return appUser.getBlog().getBlogId().equals(blogId);
     }
 
     @Override

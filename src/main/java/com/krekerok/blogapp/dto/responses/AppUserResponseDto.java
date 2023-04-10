@@ -1,5 +1,6 @@
 package com.krekerok.blogapp.dto.responses;
 
+import com.krekerok.blogapp.entity.Blog;
 import java.time.Instant;
 import lombok.Builder;
 import lombok.Value;
@@ -8,8 +9,9 @@ import lombok.Value;
 @Builder
 public class AppUserResponseDto {
 
-    long id;
+    Long userId;
     String username;
     String email;
     Instant createdAt;
+    Long blogId;
 }

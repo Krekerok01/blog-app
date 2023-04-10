@@ -36,6 +36,10 @@ dependencies {
 
 	implementation 'org.liquibase:liquibase-core:4.19.0'
 
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+
 	implementation group: 'com.cloudinary', name: 'cloudinary-http44', version: '1.32.2'
 }
 
