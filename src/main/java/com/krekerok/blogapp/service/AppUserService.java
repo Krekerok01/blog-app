@@ -1,8 +1,8 @@
 package com.krekerok.blogapp.service;
 
-import com.krekerok.blogapp.dto.requests.AppUserLoginDto;
-import com.krekerok.blogapp.dto.responses.AppUserLoginReadDto;
-import com.krekerok.blogapp.dto.responses.AppUserReadDto;
+import com.krekerok.blogapp.dto.requests.AppUserLoginRequestDto;
+import com.krekerok.blogapp.dto.responses.AppUserLoginResponseDto;
+import com.krekerok.blogapp.dto.responses.AppUserResponseDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.RedisUser;
@@ -14,13 +14,13 @@ public interface AppUserService {
 
     void createUser(RedisUser redisUser);
 
-    AppUserLoginReadDto loginUser(AppUserLoginDto appUserLoginDto);
+    AppUserLoginResponseDto loginUser(AppUserLoginRequestDto appUserLoginRequestDto);
 
     AppUser findAppUserByAppUserId(Long appUserId);
 
     AppUser saveBlogToTheAppUser(AppUser appUser);
 
-    List<AppUserReadDto> findAll();
+    List<AppUserResponseDto> findAll();
 
     boolean deleteAppUserById(long id);
 

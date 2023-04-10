@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 import lombok.Value;
 
 @Value
-public class BlogCreateDto {
+public class BlogRequestDto {
 
     @NotBlank
     @Size(min = 5, max = 40, message = "Blog name min size is 5 symbols and max size is 40 symbols")
@@ -16,7 +16,7 @@ public class BlogCreateDto {
     String blogName;
 
     @JsonCreator
-    public BlogCreateDto(@JsonProperty("blogName") String blogName) {
+    public BlogRequestDto(@JsonProperty("blogName") String blogName) {
         this.blogName = blogName;
     }
 }

@@ -1,7 +1,7 @@
 package com.krekerok.blogapp.service.impl;
 
-import com.krekerok.blogapp.dto.requests.BlogCreateDto;
-import com.krekerok.blogapp.dto.responses.BlogReadDto;
+import com.krekerok.blogapp.dto.requests.BlogRequestDto;
+import com.krekerok.blogapp.dto.responses.BlogResponseDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.exception.BlogExistsException;
@@ -24,17 +24,17 @@ public class BlogServiceImpl implements BlogService {
     private BlogRepository blogRepository;
 
     @Override
-    public BlogReadDto createBlog(Long appUserId, BlogCreateDto blogCreateDto) {
+    public BlogResponseDto createBlog(Long appUserId, BlogRequestDto blogRequestDto) {
         AppUser appUser = appUserService.findAppUserByAppUserId(appUserId);
 
         if (appUser.getBlog() == null) {
-            Blog blog = Blog.builder().blogName(blogCreateDto.getBlogName())
+            Blog blog = Blog.builder().blogName(blogRequestDto.getBlogName())
                 .createdAt(Instant.now()).modifiedAt(Instant.now()).build();
             appUser.setBlog(blog);
             AppUser appUser1 = appUserService.saveBlogToTheAppUser(appUser);
-            return BlogReadDto.builder()
+            return BlogResponseDto.builder()
                 .blogId(appUser1.getBlog().getBlogId())
-                .blogName(blogCreateDto.getBlogName())
+                .blogName(blogRequestDto.getBlogName())
                 .createdAt(appUser1.getBlog().getCreatedAt())
                 .build();
         } else {
@@ -60,13 +60,13 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogReadDto updateBlog(long blogId, BlogCreateDto blogCreateDto, String jwt) {
+    public BlogResponseDto updateBlog(long blogId, BlogRequestDto blogRequestDto, String jwt) {
         Blog blog = blogRepository.findById(blogId).orElseThrow(() -> new BlogNotFoundException("Blog not found"));
         if (appUserService.checkingForDataCompliance(blog.getBlogId(), jwt)){
-            blog.setBlogName(blogCreateDto.getBlogName());
+            blog.setBlogName(blogRequestDto.getBlogName());
             blog.setModifiedAt(Instant.now());
             Blog updatedBlog = blogRepository.save(blog);
-            return BlogReadDto.builder()
+            return BlogResponseDto.builder()
                 .blogId(updatedBlog.getBlogId())
                 .blogName(updatedBlog.getBlogName())
                 .createdAt(updatedBlog.getCreatedAt())

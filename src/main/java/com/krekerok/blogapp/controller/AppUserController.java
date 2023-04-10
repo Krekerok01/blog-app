@@ -3,19 +3,16 @@ package com.krekerok.blogapp.controller;
 import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.notFound;
 
-import com.krekerok.blogapp.dto.responses.AppUserReadDto;
+import com.krekerok.blogapp.dto.responses.AppUserResponseDto;
 import com.krekerok.blogapp.service.AppUserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +33,7 @@ public class AppUserController {
         @ApiResponse(responseCode = "404", description = "There are no users in the database",
             content = @Content)})
     @GetMapping("/all")
-    public ResponseEntity<List<AppUserReadDto>> getAllAppUsers(){
+    public ResponseEntity<List<AppUserResponseDto>> getAllAppUsers(){
         return new ResponseEntity<>(appUserService.findAll(), HttpStatus.OK);
     }
 

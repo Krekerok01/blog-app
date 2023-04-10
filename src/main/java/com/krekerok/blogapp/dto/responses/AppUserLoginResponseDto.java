@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class AppUserLoginReadDto {
+public class AppUserLoginResponseDto {
 
     String token;
     String type = "Bearer";

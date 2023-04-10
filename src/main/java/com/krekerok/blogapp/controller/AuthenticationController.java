@@ -2,8 +2,8 @@ package com.krekerok.blogapp.controller;
 
 import static org.springframework.http.ResponseEntity.ok;
 
-import com.krekerok.blogapp.dto.requests.AppUserLoginDto;
-import com.krekerok.blogapp.dto.responses.AppUserLoginReadDto;
+import com.krekerok.blogapp.dto.requests.AppUserLoginRequestDto;
+import com.krekerok.blogapp.dto.responses.AppUserLoginResponseDto;
 import com.krekerok.blogapp.service.AppUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,13 +33,14 @@ public class AuthenticationController {
             content = {
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = AppUserLoginReadDto.class))
+                    schema = @Schema(implementation = AppUserLoginResponseDto.class))
             }),
         @ApiResponse(responseCode = "401", description = "If incorrect login or password.",
             content = @Content)})
     @PostMapping("/login")
-    public ResponseEntity<AppUserLoginReadDto> loginUser(@Valid @RequestBody AppUserLoginDto appUserLoginDto) {
-        AppUserLoginReadDto appUserLoginReadDto = appUserService.loginUser(appUserLoginDto);
-        return ok(appUserLoginReadDto);
+    public ResponseEntity<AppUserLoginResponseDto> loginUser(@Valid @RequestBody AppUserLoginRequestDto appUserLoginRequestDto) {
+        AppUserLoginResponseDto appUserLoginResponseDto = appUserService.loginUser(
+            appUserLoginRequestDto);
+        return ok(appUserLoginResponseDto);
     }
 }

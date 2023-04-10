@@ -1,11 +1,7 @@
 package com.krekerok.blogapp.controller;
 
-import static org.springframework.http.ResponseEntity.noContent;
-import static org.springframework.http.ResponseEntity.notFound;
-
-import com.krekerok.blogapp.dto.requests.BlogCreateDto;
-import com.krekerok.blogapp.dto.responses.AppUserLoginReadDto;
-import com.krekerok.blogapp.dto.responses.BlogReadDto;
+import com.krekerok.blogapp.dto.requests.BlogRequestDto;
+import com.krekerok.blogapp.dto.responses.BlogResponseDto;
 import com.krekerok.blogapp.service.BlogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -39,7 +35,7 @@ public class BlogController {
             content = {
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = BlogReadDto.class))
+                    schema = @Schema(implementation = BlogResponseDto.class))
             }),
         @ApiResponse(responseCode = "400", description = "Error: Validation errors or creating more than one blog",
             content = @Content),
@@ -49,9 +45,9 @@ public class BlogController {
             content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/{appUserId}")
-    public ResponseEntity<BlogReadDto> createBlog(@PathVariable Long appUserId,
-        @Valid @RequestBody BlogCreateDto blogCreateDto) {
-        return new ResponseEntity<>(blogService.createBlog(appUserId, blogCreateDto), HttpStatus.CREATED);
+    public ResponseEntity<BlogResponseDto> createBlog(@PathVariable Long appUserId,
+        @Valid @RequestBody BlogRequestDto blogRequestDto) {
+        return new ResponseEntity<>(blogService.createBlog(appUserId, blogRequestDto), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Deleting the blog", description = "Deleting a blog from the database")
@@ -75,7 +71,7 @@ public class BlogController {
             content = {
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = BlogReadDto.class))
+                    schema = @Schema(implementation = BlogResponseDto.class))
             }),
         @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
             content = @Content),
@@ -83,9 +79,9 @@ public class BlogController {
             content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")
     @PatchMapping("/{blogId}")
-    public ResponseEntity<BlogReadDto> updateBlog(@PathVariable long blogId,
-        @Valid @RequestBody BlogCreateDto blogCreateDto, HttpServletRequest request){
+    public ResponseEntity<BlogResponseDto> updateBlog(@PathVariable long blogId,
+        @Valid @RequestBody BlogRequestDto blogRequestDto, HttpServletRequest request){
         return new ResponseEntity<>(blogService
-            .updateBlog(blogId, blogCreateDto, request.getHeader("Authorization").substring(7)), HttpStatus.OK);
+            .updateBlog(blogId, blogRequestDto, request.getHeader("Authorization").substring(7)), HttpStatus.OK);
     }
 }

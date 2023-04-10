@@ -1,6 +1,6 @@
 package com.krekerok.blogapp.service.impl;
 
-import com.krekerok.blogapp.dto.requests.AppUserCreateDto;
+import com.krekerok.blogapp.dto.requests.AppUserRequestDto;
 import com.krekerok.blogapp.entity.RedisUser;
 import com.krekerok.blogapp.exception.ActivationCodeNotFoundException;
 import com.krekerok.blogapp.exception.FieldExistsException;
@@ -33,11 +33,11 @@ public class RedisServiceImpl implements RedisService {
 
 
     @Override
-    public String registerUser(AppUserCreateDto appUserCreateDto) {
+    public String registerUser(AppUserRequestDto appUserRequestDto) {
 
-        appUserService.checkingForExistenceInTheDatabase(appUserCreateDto.getUsername(), appUserCreateDto.getEmail());
+        appUserService.checkingForExistenceInTheDatabase(appUserRequestDto.getUsername(), appUserRequestDto.getEmail());
 
-        RedisUser redisUser = getRedisUserFromUserCreateDTO(appUserCreateDto);
+        RedisUser redisUser = getRedisUserFromUserCreateDTO(appUserRequestDto);
 
         redisUserExists(redisUser.getEmail(), redisUser.getUsername());
 
@@ -46,11 +46,11 @@ public class RedisServiceImpl implements RedisService {
         return redisUser.getActivationCode();
     }
 
-    private RedisUser getRedisUserFromUserCreateDTO(AppUserCreateDto appUserCreateDto) {
+    private RedisUser getRedisUserFromUserCreateDTO(AppUserRequestDto appUserRequestDto) {
         RedisUser redisUser = RedisUser.builder()
-            .username(appUserCreateDto.getUsername())
-            .password(passwordEncoder.encode(appUserCreateDto.getPassword()))
-            .email(appUserCreateDto.getEmail())
+            .username(appUserRequestDto.getUsername())
+            .password(passwordEncoder.encode(appUserRequestDto.getPassword()))
+            .email(appUserRequestDto.getEmail())
             .createdAt(Instant.now())
             .timeOfSendingVerificationLink(Instant.now())
             .activationCode(UUID.randomUUID().toString())

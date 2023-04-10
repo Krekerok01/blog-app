@@ -1,7 +1,7 @@
 package com.krekerok.blogapp.exception;
 
 
-import com.krekerok.blogapp.dto.responses.ExceptionDto;
+import com.krekerok.blogapp.dto.responses.ExceptionResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -19,9 +19,9 @@ public class ApplicationExceptionHandler {
         FileUploadException.class,
         FileDeletionException.class,
         NoBlogIdMatchException.class})
-    public ResponseEntity<ExceptionDto> handleApplicationException(RuntimeException e) {
+    public ResponseEntity<ExceptionResponseDto> handleApplicationException(RuntimeException e) {
         return new ResponseEntity<>(
-            new ExceptionDto(e.getMessage(), HttpStatus.BAD_REQUEST.value(),
+            new ExceptionResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase()),
             HttpStatus.BAD_REQUEST);
     }
@@ -31,37 +31,37 @@ public class ApplicationExceptionHandler {
         UserNotFoundException.class,
         BlogNotFoundException.class,
         PostNotFoundException.class})
-    public ResponseEntity<ExceptionDto> handleNotFoundException(RuntimeException e) {
+    public ResponseEntity<ExceptionResponseDto> handleNotFoundException(RuntimeException e) {
         return new ResponseEntity<>(
-            new ExceptionDto(e.getMessage(), HttpStatus.NOT_FOUND.value(),
+            new ExceptionResponseDto(e.getMessage(), HttpStatus.NOT_FOUND.value(),
                 HttpStatus.NOT_FOUND.getReasonPhrase()),
             HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(EmailVerifiedException.class)
-    public ResponseEntity<ExceptionDto> handleEmailVerifiedException(EmailVerifiedException e) {
+    public ResponseEntity<ExceptionResponseDto> handleEmailVerifiedException(EmailVerifiedException e) {
         return new ResponseEntity<>(
-            new ExceptionDto(e.getMessage(), HttpStatus.NOT_ACCEPTABLE.value(),
+            new ExceptionResponseDto(e.getMessage(), HttpStatus.NOT_ACCEPTABLE.value(),
                 HttpStatus.NOT_ACCEPTABLE.getReasonPhrase()),
             HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionDto> parameterExceptionHandler(
+    public ResponseEntity<ExceptionResponseDto> parameterExceptionHandler(
         MethodArgumentNotValidException e) {
 
         BindingResult result = e.getBindingResult();
         if (result.hasErrors()) {
             for (FieldError error : result.getFieldErrors()) {
                 return new ResponseEntity<>(
-                    new ExceptionDto(error.getDefaultMessage(), HttpStatus.BAD_REQUEST.value(),
+                    new ExceptionResponseDto(error.getDefaultMessage(), HttpStatus.BAD_REQUEST.value(),
                         HttpStatus.BAD_REQUEST.getReasonPhrase()),
                     HttpStatus.BAD_REQUEST);
             }
         }
 
         return new ResponseEntity<>(
-            new ExceptionDto("Argument validation failed", HttpStatus.BAD_REQUEST.value(),
+            new ExceptionResponseDto("Argument validation failed", HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase()),
             HttpStatus.BAD_REQUEST);
     }

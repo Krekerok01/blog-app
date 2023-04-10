@@ -6,10 +6,9 @@ import lombok.Value;
 
 @Value
 @Builder
-public class AppUserReadDto {
+public class BlogResponseDto {
 
-    long id;
-    String username;
-    String email;
-    Instant createdAt;
+    private Long blogId;
+    private String blogName;
+    private Instant createdAt;
 }

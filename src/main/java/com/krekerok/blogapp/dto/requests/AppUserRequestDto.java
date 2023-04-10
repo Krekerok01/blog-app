@@ -9,7 +9,7 @@ import lombok.Value;
 
 @Value
 @PasswordEquality(originalField = "password", confirmField = "confirmPassword")
-public class AppUserCreateDto {
+public class AppUserRequestDto {
 
     @NotBlank
     @Size(min = 5, max = 50, message = "Username min size is 5 symbols and max size is 50 symbols")

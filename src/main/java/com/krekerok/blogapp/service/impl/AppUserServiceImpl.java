@@ -2,9 +2,9 @@ package com.krekerok.blogapp.service.impl;
 
 import com.krekerok.blogapp.configuration.jwt.JwtUtils;
 import com.krekerok.blogapp.configuration.user_details.UserDetailsImpl;
-import com.krekerok.blogapp.dto.requests.AppUserLoginDto;
-import com.krekerok.blogapp.dto.responses.AppUserLoginReadDto;
-import com.krekerok.blogapp.dto.responses.AppUserReadDto;
+import com.krekerok.blogapp.dto.requests.AppUserLoginRequestDto;
+import com.krekerok.blogapp.dto.responses.AppUserLoginResponseDto;
+import com.krekerok.blogapp.dto.responses.AppUserResponseDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.RedisUser;
@@ -39,14 +39,13 @@ public class AppUserServiceImpl implements AppUserService {
 
 
     @Override
-    public AppUserLoginReadDto loginUser(AppUserLoginDto appUserLoginDto) {
-        Authentication authentication = getAuthentication(appUserLoginDto);
+    public AppUserLoginResponseDto loginUser(AppUserLoginRequestDto appUserLoginRequestDto) {
+        Authentication authentication = getAuthentication(appUserLoginRequestDto);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-
-        return AppUserLoginReadDto.builder()
+        return AppUserLoginResponseDto.builder()
             .token(jwt)
             .userId(userDetails.getId())
             .username(userDetails.getUsername())
@@ -56,10 +55,10 @@ public class AppUserServiceImpl implements AppUserService {
 
 
 
-    private Authentication getAuthentication(AppUserLoginDto appUserLoginDto) {
+    private Authentication getAuthentication(AppUserLoginRequestDto appUserLoginRequestDto) {
         return authenticationManager
-            .authenticate(new UsernamePasswordAuthenticationToken(appUserLoginDto.getUsername(),
-                appUserLoginDto.getPassword()));
+            .authenticate(new UsernamePasswordAuthenticationToken(appUserLoginRequestDto.getUsername(),
+                appUserLoginRequestDto.getPassword()));
     }
 
     @Override
@@ -100,12 +99,12 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public List<AppUserReadDto> findAll() {
+    public List<AppUserResponseDto> findAll() {
         List<AppUser> users = appUserRepository.findAll();
 
         if (!users.isEmpty()) {
             return users.stream().map(user ->
-                AppUserReadDto.builder()
+                AppUserResponseDto.builder()
                     .id(user.getUserId())
                     .username(user.getUsername())
                     .email(user.getEmail())
