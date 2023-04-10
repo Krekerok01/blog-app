@@ -45,6 +45,14 @@ public class PostController {
         return new ResponseEntity<>(postService.createPost(blogId, file, header, text), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Deleting the post", description = "Deleting a post from the database")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "No content if post was deleted from database",
+            content = @Content),
+        @ApiResponse(responseCode = "400", description = "Error: Problems with deletion file from the Cloudinary",
+            content = @Content),
+        @ApiResponse(responseCode = "404", description = "Error: Post wasn't found in the database",
+            content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Long postId) {
