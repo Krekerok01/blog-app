@@ -2,6 +2,7 @@ package com.krekerok.blogapp.service.impl;
 
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
+import com.krekerok.blogapp.exception.PostNotFoundException;
 import com.krekerok.blogapp.repository.PostRepository;
 import com.krekerok.blogapp.service.BlogService;
 import com.krekerok.blogapp.service.CloudinaryService;
@@ -36,5 +37,18 @@ public class PostServiceImpl implements PostService {
             .modifiedAt(Instant.now())
             .build());
         return post.getPostId();
+    }
+
+    @Override
+    @Transactional
+    public void deletePost(Long postId) {
+        Post post = getPostById(postId);
+        cloudinaryService.deleteFile(post.getImageURL());
+        postRepository.delete(post);
+    }
+
+    public Post getPostById(Long postId) {
+        return postRepository.findById(postId)
+            .orElseThrow(() -> new PostNotFoundException("Post not found"));
     }
 }

@@ -17,6 +17,7 @@ public class ApplicationExceptionHandler {
         FieldExistsException.class,
         BlogExistsException.class,
         FileUploadException.class,
+        FileDeletionException.class,
         NoBlogIdMatchException.class})
     public ResponseEntity<ExceptionDto> handleApplicationException(RuntimeException e) {
         return new ResponseEntity<>(
@@ -28,7 +29,8 @@ public class ApplicationExceptionHandler {
     @ExceptionHandler({
         ActivationCodeNotFoundException.class,
         UserNotFoundException.class,
-        BlogNotFoundException.class})
+        BlogNotFoundException.class,
+        PostNotFoundException.class})
     public ResponseEntity<ExceptionDto> handleNotFoundException(RuntimeException e) {
         return new ResponseEntity<>(
             new ExceptionDto(e.getMessage(), HttpStatus.NOT_FOUND.value(),
