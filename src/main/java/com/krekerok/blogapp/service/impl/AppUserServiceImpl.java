@@ -76,13 +76,18 @@ public class AppUserServiceImpl implements AppUserService {
 
     private AppUser getUserFromRedisUser(RedisUser redisUser) {
         Role role = roleService.createRoleIfNotExist(RoleName.USER);
-        return AppUser.builder()
-            .username(redisUser.getUsername())
-            .password(redisUser.getPassword())
-            .email(redisUser.getEmail())
-            .createdAt(redisUser.getCreatedAt())
-            .roles(Set.of(role))
-            .build();
+
+        AppUser appUser = AppUserMapper.INSTANCE.toAppUser(redisUser);
+        appUser.setRoles(Set.of(role));
+        return appUser;
+
+//        return AppUser.builder()
+//            .username(redisUser.getUsername())
+//            .password(redisUser.getPassword())
+//            .email(redisUser.getEmail())
+//            .createdAt(redisUser.getCreatedAt())
+//            .roles(Set.of(role))
+//            .build();
     }
 
     @Override
