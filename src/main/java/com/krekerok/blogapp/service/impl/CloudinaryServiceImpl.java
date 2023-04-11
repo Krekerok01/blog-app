@@ -22,12 +22,10 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     @Override
     public String uploadFile(MultipartFile multipartFile) {
         try {
-            String url = cloudinary.uploader()
-                .upload(multipartFile.getBytes(),
-                    Map.of("public_id", UUID.randomUUID().toString()))
+            return cloudinary.uploader()
+                .upload(multipartFile.getBytes(), Map.of("public_id", UUID.randomUUID().toString()))
                 .get("url")
                 .toString();
-            return url;
         } catch (IOException e) {
             throw new FileUploadException("Problems with file uploading");
         }
