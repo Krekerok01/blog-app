@@ -29,15 +29,12 @@ public class BlogServiceImpl implements BlogService {
         AppUser appUser = appUserService.findAppUserByAppUserId(appUserId);
 
         if (appUser.getBlog() == null) {
-            Blog blog = Blog.builder().blogName(blogRequestDto.getBlogName())
-                .createdAt(Instant.now()).modifiedAt(Instant.now()).build();
+            Blog blog = BlogMapper.INSTANCE.toBlog(blogRequestDto);
             appUser.setBlog(blog);
-            AppUser appUser1 = appUserService.saveBlogToTheAppUser(appUser);
-            return BlogResponseDto.builder()
-                .blogId(appUser1.getBlog().getBlogId())
-                .blogName(blogRequestDto.getBlogName())
-                .createdAt(appUser1.getBlog().getCreatedAt())
-                .build();
+            AppUser savedAppUser = appUserService.saveBlogToTheAppUser(appUser);
+            Blog savedBlog = savedAppUser.getBlog();
+
+            return BlogMapper.INSTANCE.toBlogResponseDto(savedBlog);
         } else {
             throw new BlogExistsException("User cannot have more than one blog.");
         }
