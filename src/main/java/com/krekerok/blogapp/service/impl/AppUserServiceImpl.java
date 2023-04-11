@@ -80,14 +80,6 @@ public class AppUserServiceImpl implements AppUserService {
         AppUser appUser = AppUserMapper.INSTANCE.toAppUser(redisUser);
         appUser.setRoles(Set.of(role));
         return appUser;
-
-//        return AppUser.builder()
-//            .username(redisUser.getUsername())
-//            .password(redisUser.getPassword())
-//            .email(redisUser.getEmail())
-//            .createdAt(redisUser.getCreatedAt())
-//            .roles(Set.of(role))
-//            .build();
     }
 
     @Override
