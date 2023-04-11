@@ -7,6 +7,7 @@ import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.exception.BlogExistsException;
 import com.krekerok.blogapp.exception.BlogNotFoundException;
 import com.krekerok.blogapp.exception.NoBlogIdMatchException;
+import com.krekerok.blogapp.mapper.BlogMapper;
 import com.krekerok.blogapp.repository.BlogRepository;
 import com.krekerok.blogapp.service.AppUserService;
 import com.krekerok.blogapp.service.BlogService;
@@ -66,11 +67,7 @@ public class BlogServiceImpl implements BlogService {
             blog.setBlogName(blogRequestDto.getBlogName());
             blog.setModifiedAt(Instant.now());
             Blog updatedBlog = blogRepository.save(blog);
-            return BlogResponseDto.builder()
-                .blogId(updatedBlog.getBlogId())
-                .blogName(updatedBlog.getBlogName())
-                .createdAt(updatedBlog.getCreatedAt())
-                .build();
+            return BlogMapper.INSTANCE.toBlogResponseDto(updatedBlog);
         } else {
             throw new NoBlogIdMatchException("Invalid blog id");
         }
