@@ -28,15 +28,19 @@ public class PostServiceImpl implements PostService {
     public Long createPost(Long blogId, PostRequestDto postRequestDto) {
         Blog blog = blogService.findBlogById(blogId);
         String url =  cloudinaryService.uploadFile(postRequestDto.getImageFile());
-        Post post = postRepository.save(Post.builder()
+        Post post = postRepository.save(getPost(blog, url, postRequestDto));
+        return post.getPostId();
+    }
+
+    private Post getPost(Blog blog, String url, PostRequestDto postRequestDto){
+        return Post.builder()
             .header(postRequestDto.getHeader())
             .text(postRequestDto.getText())
             .blog(blog)
             .imageURL(url)
             .createdAt(Instant.now())
             .modifiedAt(Instant.now())
-            .build());
-        return post.getPostId();
+            .build();
     }
 
     @Override
