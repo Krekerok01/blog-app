@@ -12,7 +12,7 @@ import com.krekerok.blogapp.entity.Role;
 import com.krekerok.blogapp.entity.RoleName;
 import com.krekerok.blogapp.exception.FieldExistsException;
 import com.krekerok.blogapp.exception.UserNotFoundException;
-import com.krekerok.blogapp.mapper.AppUserMapper;
+import com.krekerok.blogapp.mapper.UserMapper;
 import com.krekerok.blogapp.repository.AppUserRepository;
 import com.krekerok.blogapp.service.AppUserService;
 import com.krekerok.blogapp.service.RoleService;
@@ -77,7 +77,7 @@ public class AppUserServiceImpl implements AppUserService {
     private AppUser getUserFromRedisUser(RedisUser redisUser) {
         Role role = roleService.createRoleIfNotExist(RoleName.USER);
 
-        AppUser appUser = AppUserMapper.INSTANCE.toAppUser(redisUser);
+        AppUser appUser = UserMapper.INSTANCE.toAppUser(redisUser);
         appUser.setRoles(Set.of(role));
         return appUser;
     }
@@ -107,7 +107,7 @@ public class AppUserServiceImpl implements AppUserService {
 
         if (!users.isEmpty()) {
             return users.stream()
-                .map(user -> AppUserMapper.INSTANCE.toAppUserResponseDto(user))
+                .map(user -> UserMapper.INSTANCE.toAppUserResponseDto(user))
                 .collect(Collectors.toList());
         } else {
             throw new UserNotFoundException("There are no users in the database");

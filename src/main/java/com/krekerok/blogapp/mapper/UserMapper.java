@@ -8,8 +8,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface AppUserMapper {
-    AppUserMapper INSTANCE = Mappers.getMapper(AppUserMapper.class);
+public interface UserMapper {
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     @Mapping(target = "blogId", source = "appUser.blog.blogId")
     AppUserResponseDto toAppUserResponseDto(AppUser appUser);
