@@ -4,11 +4,10 @@ import com.krekerok.blogapp.dto.requests.AppUserRequestDto;
 import com.krekerok.blogapp.entity.RedisUser;
 import com.krekerok.blogapp.exception.ActivationCodeNotFoundException;
 import com.krekerok.blogapp.exception.FieldExistsException;
+import com.krekerok.blogapp.mapper.UserMapper;
 import com.krekerok.blogapp.service.AppUserService;
 import com.krekerok.blogapp.service.MailSenderService;
 import com.krekerok.blogapp.service.RedisService;
-import java.time.Instant;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,14 +46,9 @@ public class RedisServiceImpl implements RedisService {
     }
 
     private RedisUser getRedisUserFromUserCreateDTO(AppUserRequestDto appUserRequestDto) {
-        RedisUser redisUser = RedisUser.builder()
-            .username(appUserRequestDto.getUsername())
-            .password(passwordEncoder.encode(appUserRequestDto.getPassword()))
-            .email(appUserRequestDto.getEmail())
-            .createdAt(Instant.now())
-            .timeOfSendingVerificationLink(Instant.now())
-            .activationCode(UUID.randomUUID().toString())
-            .build();
+        RedisUser redisUser = UserMapper.INSTANCE.toRedisUserWithoutPassword(appUserRequestDto);
+        redisUser.setPassword(passwordEncoder.encode(appUserRequestDto.getPassword()));
+
         return redisUser;
     }
 
