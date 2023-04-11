@@ -1,9 +1,11 @@
 package com.krekerok.blogapp.service.impl;
 
 import com.krekerok.blogapp.dto.requests.PostRequestDto;
+import com.krekerok.blogapp.dto.responses.PostResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.exception.PostNotFoundException;
+import com.krekerok.blogapp.mapper.PostMapper;
 import com.krekerok.blogapp.repository.PostRepository;
 import com.krekerok.blogapp.service.BlogService;
 import com.krekerok.blogapp.service.CloudinaryService;
@@ -25,11 +27,11 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     @Override
-    public Long createPost(Long blogId, PostRequestDto postRequestDto) {
+    public PostResponseDto createPost(Long blogId, PostRequestDto postRequestDto) {
         Blog blog = blogService.findBlogById(blogId);
         String url =  cloudinaryService.uploadFile(postRequestDto.getImageFile());
         Post post = postRepository.save(getPost(blog, url, postRequestDto));
-        return post.getPostId();
+        return PostMapper.INSTANCE.toPostResponseDto(post);
     }
 
     private Post getPost(Blog blog, String url, PostRequestDto postRequestDto){
