@@ -32,11 +32,7 @@ public class MailSenderServiceImpl implements MailSenderService {
             helper.setSubject(subject);
             helper.setFrom(username);
             mailSender.send(mimeMessage);
-        } catch (MessagingException e) {
-            log.error("MessagingException: ");
-            log.error(e.getMessage());
-        } catch (MailSendException e){
-            log.error("MailSendException: ");
+        } catch (MessagingException | MailSendException e) {
             log.error(e.getMessage());
         }
     }
