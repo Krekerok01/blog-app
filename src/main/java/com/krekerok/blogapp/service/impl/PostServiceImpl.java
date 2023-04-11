@@ -1,5 +1,6 @@
 package com.krekerok.blogapp.service.impl;
 
+import com.krekerok.blogapp.dto.requests.PostRequestDto;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.exception.PostNotFoundException;
@@ -11,7 +12,6 @@ import java.time.Instant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -25,12 +25,12 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     @Override
-    public Long createPost(Long blogId, MultipartFile file, String header, String text){
+    public Long createPost(Long blogId, PostRequestDto postRequestDto) {
         Blog blog = blogService.findBlogById(blogId);
-        String url =  cloudinaryService.uploadFile(file);
+        String url =  cloudinaryService.uploadFile(postRequestDto.getImageFile());
         Post post = postRepository.save(Post.builder()
-            .header(header)
-            .text(text)
+            .header(postRequestDto.getHeader())
+            .text(postRequestDto.getText())
             .blog(blog)
             .imageURL(url)
             .createdAt(Instant.now())

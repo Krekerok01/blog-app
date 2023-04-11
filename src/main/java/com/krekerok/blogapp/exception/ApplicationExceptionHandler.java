@@ -4,6 +4,7 @@ package com.krekerok.blogapp.exception;
 import com.krekerok.blogapp.dto.responses.ExceptionResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -60,6 +61,24 @@ public class ApplicationExceptionHandler {
             }
         }
 
+        return new ResponseEntity<>(
+            new ExceptionResponseDto("Argument validation failed", HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase()),
+            HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ExceptionResponseDto> handleBindException(BindException ex) {
+        if (ex.hasErrors()) {
+            for (FieldError error : ex.getFieldErrors()) {
+                return new ResponseEntity<>(
+                    new ExceptionResponseDto(error.getDefaultMessage(),
+                        HttpStatus.BAD_REQUEST.value(),
+                        HttpStatus.BAD_REQUEST.getReasonPhrase()),
+                    HttpStatus.BAD_REQUEST);
+            }
+        }
         return new ResponseEntity<>(
             new ExceptionResponseDto("Argument validation failed", HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase()),

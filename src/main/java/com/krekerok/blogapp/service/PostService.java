@@ -1,10 +1,11 @@
 package com.krekerok.blogapp.service;
 
-import org.springframework.web.multipart.MultipartFile;
+import com.krekerok.blogapp.dto.requests.PostRequestDto;
+
 
 public interface PostService {
 
-    Long createPost(Long blogId, MultipartFile file, String header, String text);
+    Long createPost(Long blogId, PostRequestDto postRequestDto);
 
     void deletePost(Long postId);
 }
