@@ -1,7 +1,9 @@
 package com.krekerok.blogapp.service.impl;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -9,6 +11,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.krekerok.blogapp.configuration.jwt.JwtUtils;
 import com.krekerok.blogapp.entity.AppUser;
@@ -82,6 +85,20 @@ class AppUserServiceImplTest {
             .timeOfSendingVerificationLink(Instant.now())
             .createdAt(Instant.now())
             .build();
+    }
+
+    @Test
+    void testSaveAppUser(){
+        AppUser appUser = getAppUser(getUserRole());
+        AppUser savedUser = getAppUser(getUserRole());
+        savedUser.setUserId(1L);
+
+        doReturn(savedUser).when(appUserRepository).save(appUser);
+
+        AppUser actualResult = appUserService.saveAppUser(appUser);
+
+        assertEquals(savedUser, actualResult);
+        verify(appUserRepository, times(1)).save(appUser);
     }
 
 
