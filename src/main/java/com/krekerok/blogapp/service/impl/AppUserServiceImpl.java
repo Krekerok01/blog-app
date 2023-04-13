@@ -97,7 +97,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUser saveBlogToTheAppUser(AppUser appUser) {
+    public AppUser saveAppUser(AppUser appUser) {
         return appUserRepository.save(appUser);
     }
 

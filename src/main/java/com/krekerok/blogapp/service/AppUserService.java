@@ -18,7 +18,7 @@ public interface AppUserService {
 
     AppUser findAppUserByAppUserId(Long appUserId);
 
-    AppUser saveBlogToTheAppUser(AppUser appUser);
+    AppUser saveAppUser(AppUser appUser);
 
     List<AppUserResponseDto> findAll();
 

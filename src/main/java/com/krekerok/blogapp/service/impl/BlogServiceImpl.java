@@ -31,7 +31,7 @@ public class BlogServiceImpl implements BlogService {
         if (appUser.getBlog() == null) {
             Blog blog = BlogMapper.INSTANCE.toBlog(blogRequestDto);
             appUser.setBlog(blog);
-            AppUser savedAppUser = appUserService.saveBlogToTheAppUser(appUser);
+            AppUser savedAppUser = appUserService.saveAppUser(appUser);
             Blog savedBlog = savedAppUser.getBlog();
 
             return BlogMapper.INSTANCE.toBlogResponseDto(savedBlog);
