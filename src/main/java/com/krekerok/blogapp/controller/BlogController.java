@@ -96,6 +96,8 @@ public class BlogController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = BlogResponseDto.class))
             }),
+        @ApiResponse(responseCode = "400", description = "Error: Invalid blog ID",
+            content = @Content),
         @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
             content = @Content),
         @ApiResponse(responseCode = "404", description = "There are no blogs in the database",
