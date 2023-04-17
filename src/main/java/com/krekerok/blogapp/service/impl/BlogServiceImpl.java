@@ -69,4 +69,15 @@ public class BlogServiceImpl implements BlogService {
             throw new NoBlogIdMatchException("Invalid blog id");
         }
     }
+
+    @Override
+    public BlogResponseDto getBlog(long id, String jwt) {
+        Blog blog = blogRepository.findById(id).orElseThrow(() -> new BlogNotFoundException("Blog not found"));
+        if (appUserService.checkingForDataCompliance(blog.getBlogId(), jwt)){
+            return BlogMapper.INSTANCE.toBlogResponseDto(blog);
+        } else {
+            throw new NoBlogIdMatchException("Invalid blog id");
+        }
+
+    }
 }

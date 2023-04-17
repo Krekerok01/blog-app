@@ -13,4 +13,6 @@ public interface BlogService {
     void deleteBlogById(long id, String jwt);
 
     BlogResponseDto updateBlog(long blogId, BlogRequestDto blogRequestDto, String jwt);
+
+    BlogResponseDto getBlog(long id, String jwt);
 }

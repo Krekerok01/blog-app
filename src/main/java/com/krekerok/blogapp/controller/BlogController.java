@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,7 @@ public class BlogController {
     @Autowired
     private BlogService blogService;
 
-    @Operation(summary = "Blog creating", description = "Create blog and save it to the database")
+    @Operation(summary = "Creating a blog", description = "Create a blog and save it to the database")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Blog created successfully",
             content = {
@@ -50,22 +51,24 @@ public class BlogController {
         return new ResponseEntity<>(blogService.createBlog(appUserId, blogRequestDto), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Deleting the blog", description = "Deleting a blog from the database")
+    @Operation(summary = "Deleting a blog", description = "Deleting a blog from the database")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "No content if blog was deleted from database",
             content = @Content),
         @ApiResponse(responseCode = "400", description = "Error: Invalid blog ID",
             content = @Content),
+        @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
+            content = @Content),
         @ApiResponse(responseCode = "404", description = "Error: Blog wasn't found in the database",
             content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAppUser(@PathVariable long id, HttpServletRequest request) {
+    public ResponseEntity<?> deleteBlog(@PathVariable long id, HttpServletRequest request) {
         blogService.deleteBlogById(id, request.getHeader("Authorization").substring(7));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Operation(summary = "Blog updating", description = "Updating(changing) blog name")
+    @Operation(summary = "Updating a blog", description = "Updating(changing) a blog name")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully updated",
             content = {
@@ -83,5 +86,23 @@ public class BlogController {
         @Valid @RequestBody BlogRequestDto blogRequestDto, HttpServletRequest request){
         return new ResponseEntity<>(blogService
             .updateBlog(blogId, blogRequestDto, request.getHeader("Authorization").substring(7)), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Getting a blog", description = "Getting a blog by id")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successful request",
+            content = {
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = BlogResponseDto.class))
+            }),
+        @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
+            content = @Content),
+        @ApiResponse(responseCode = "404", description = "There are no blogs in the database",
+            content = @Content)})
+    @SecurityRequirement(name = "Bearer Authentication")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getBlog(@PathVariable long id, HttpServletRequest request) {
+        return new ResponseEntity<>(blogService.getBlog(id, request.getHeader("Authorization").substring(7)), HttpStatus.OK);
     }
 }
