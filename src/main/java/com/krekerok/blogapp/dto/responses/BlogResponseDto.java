@@ -8,7 +8,7 @@ import lombok.Value;
 @Builder
 public class BlogResponseDto {
 
-    private Long blogId;
-    private String blogName;
-    private Instant createdAt;
+    Long blogId;
+    String blogName;
+    Instant createdAt;
 }
