@@ -30,11 +30,11 @@ public class PostServiceImpl implements PostService {
     public PostResponseDto createPost(Long blogId, PostRequestDto postRequestDto) {
         Blog blog = blogService.findBlogById(blogId);
         String url =  cloudinaryService.uploadFile(postRequestDto.getImageFile());
-        Post post = postRepository.save(getPost(blog, url, postRequestDto));
+        Post post = postRepository.save(getPostFromPostRequestDto(blog, url, postRequestDto));
         return PostMapper.INSTANCE.toPostResponseDto(post);
     }
 
-    private Post getPost(Blog blog, String url, PostRequestDto postRequestDto){
+    private Post getPostFromPostRequestDto(Blog blog, String url, PostRequestDto postRequestDto){
         return Post.builder()
             .header(postRequestDto.getHeader())
             .text(postRequestDto.getText())
@@ -51,6 +51,12 @@ public class PostServiceImpl implements PostService {
         Post post = getPostById(postId);
         cloudinaryService.deleteFile(post.getImageURL());
         postRepository.delete(post);
+    }
+
+    @Override
+    public PostResponseDto getPost(Long postId) {
+        Post post = getPostById(postId);
+        return PostMapper.INSTANCE.toPostResponseDto(post);
     }
 
     public Post getPostById(Long postId) {
