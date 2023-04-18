@@ -25,17 +25,17 @@ public class AuthenticationController {
     @Autowired
     private AppUserService appUserService;
 
-    @Operation(summary = "User login")
+    @Operation(summary = "User authorization")
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Login user",
+            description = "User authorization",
             content = {
                 @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = AppUserLoginResponseDto.class))
             }),
-        @ApiResponse(responseCode = "401", description = "If incorrect login or password.",
+        @ApiResponse(responseCode = "401", description = "Error: Incorrect login or password.",
             content = @Content)})
     @PostMapping("/login")
     public ResponseEntity<AppUserLoginResponseDto> loginUser(@Valid @RequestBody AppUserLoginRequestDto appUserLoginRequestDto) {

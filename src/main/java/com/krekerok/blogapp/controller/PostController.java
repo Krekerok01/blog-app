@@ -39,7 +39,7 @@ public class PostController {
             content = @Content),
         @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
             content = @Content),
-        @ApiResponse(responseCode = "404", description = "Error: Blog not found",
+        @ApiResponse(responseCode = "404", description = "Error: Blog wasn't found in the database",
             content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping(path = "/{blogId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -58,7 +58,7 @@ public class PostController {
             }),
         @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
             content = @Content),
-        @ApiResponse(responseCode = "404", description = "There are no post",
+        @ApiResponse(responseCode = "404", description = "Error: Post wasn't found in the database",
             content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping("/{postId}")

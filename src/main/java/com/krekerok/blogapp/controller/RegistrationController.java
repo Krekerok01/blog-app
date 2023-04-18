@@ -26,9 +26,10 @@ public class RegistrationController {
     private RedisService redisService;
 
 
-    @Operation(summary = "User registration", description = "Create user and save in Redis database. The user's activation code is returned")
+    @Operation(summary = "User registration",
+        description = "Create a user and save to the Redis database. The user's activation code is returned")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Create user",
+        @ApiResponse(responseCode = "201", description = "User registration",
             content = @Content),
         @ApiResponse(responseCode = "400", description = "Error: Username already exists or Error: Email already exists or any validation errors",
             content = @Content)})
@@ -37,12 +38,12 @@ public class RegistrationController {
         return new ResponseEntity<>(redisService.registerUser(appUserRequestDto), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Verify user email")
+    @Operation(summary = "Verification of user's mail")
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
             description = "Successful activation"),
-        @ApiResponse(responseCode = "404", description = "Activation link is outdated",
+        @ApiResponse(responseCode = "404", description = "Error: Activation link is outdated",
             content = @Content)})
     @PostMapping("/verify/{activationCode}")
     public ResponseEntity<?> verifyUser(@PathVariable

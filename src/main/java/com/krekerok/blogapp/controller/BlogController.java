@@ -43,7 +43,7 @@ public class BlogController {
             content = @Content),
         @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
             content = @Content),
-        @ApiResponse(responseCode = "404", description = "Error: User not found",
+        @ApiResponse(responseCode = "404", description = "Error: User wasn't found in the database",
             content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/{appUserId}")
@@ -79,7 +79,7 @@ public class BlogController {
             }),
         @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
             content = @Content),
-        @ApiResponse(responseCode = "404", description = "Error: User or blog not found",
+        @ApiResponse(responseCode = "404", description = "Error: User or blog wasn't found in the database",
             content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")
     @PatchMapping("/{blogId}")
