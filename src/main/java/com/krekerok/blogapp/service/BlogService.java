@@ -1,6 +1,7 @@
 package com.krekerok.blogapp.service;
 
 import com.krekerok.blogapp.dto.requests.BlogRequestDto;
+import com.krekerok.blogapp.dto.responses.BlogAndPostsResponseDto;
 import com.krekerok.blogapp.dto.responses.BlogResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 
@@ -14,5 +15,5 @@ public interface BlogService {
 
     BlogResponseDto updateBlog(long blogId, BlogRequestDto blogRequestDto, String jwt);
 
-    BlogResponseDto getBlog(long id, String jwt);
+    BlogAndPostsResponseDto getBlogWithPosts(long blogId);
 }

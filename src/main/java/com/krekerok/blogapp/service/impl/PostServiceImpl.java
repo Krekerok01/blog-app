@@ -11,6 +11,8 @@ import com.krekerok.blogapp.service.BlogService;
 import com.krekerok.blogapp.service.CloudinaryService;
 import com.krekerok.blogapp.service.PostService;
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +59,18 @@ public class PostServiceImpl implements PostService {
     public PostResponseDto getPost(Long postId) {
         Post post = getPostById(postId);
         return PostMapper.INSTANCE.toPostResponseDto(post);
+    }
+
+    @Override
+    public List<PostResponseDto> getAllPostsByBlog(Blog blog) {
+        List<Post> posts = postRepository.findAllByBlog(blog);
+        if (!posts.isEmpty()){
+            return posts.stream()
+                .map(post -> PostMapper.INSTANCE.toPostResponseDto(post))
+                .collect(Collectors.toList());
+        } else {
+            return null;
+        }
     }
 
     public Post getPostById(Long postId) {

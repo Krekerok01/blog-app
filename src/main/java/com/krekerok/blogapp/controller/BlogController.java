@@ -1,6 +1,7 @@
 package com.krekerok.blogapp.controller;
 
 import com.krekerok.blogapp.dto.requests.BlogRequestDto;
+import com.krekerok.blogapp.dto.responses.BlogAndPostsResponseDto;
 import com.krekerok.blogapp.dto.responses.BlogResponseDto;
 import com.krekerok.blogapp.service.BlogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -88,23 +89,21 @@ public class BlogController {
             .updateBlog(blogId, blogRequestDto, request.getHeader("Authorization").substring(7)), HttpStatus.OK);
     }
 
-    @Operation(summary = "Getting a blog", description = "Getting a blog by id")
+    @Operation(summary = "Getting a blog", description = "Getting all information about the blog")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successful request",
             content = {
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = BlogResponseDto.class))
+                    schema = @Schema(implementation = BlogAndPostsResponseDto.class))
             }),
-        @ApiResponse(responseCode = "400", description = "Error: Invalid blog ID",
-            content = @Content),
         @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
             content = @Content),
-        @ApiResponse(responseCode = "404", description = "There are no blogs in the database",
+        @ApiResponse(responseCode = "404", description = "Error: Blog wasn't found in the database",
             content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getBlog(@PathVariable long id, HttpServletRequest request) {
-        return new ResponseEntity<>(blogService.getBlog(id, request.getHeader("Authorization").substring(7)), HttpStatus.OK);
+    @GetMapping("/{blogId}")
+    public ResponseEntity<BlogAndPostsResponseDto> getBlog(@PathVariable Long blogId) {
+        return new ResponseEntity<>(blogService.getBlogWithPosts(blogId), HttpStatus.OK);
     }
 }
