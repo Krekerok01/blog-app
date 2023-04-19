@@ -11,4 +11,5 @@ public class BlogResponseDto {
     Long blogId;
     String blogName;
     Instant createdAt;
+    Instant modifiedAt;
 }
