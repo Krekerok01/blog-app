@@ -27,4 +27,6 @@ public interface AppUserService {
     boolean checkingForDataCompliance(Long blogId, String jwt);
 
     void deleteLinkToTheBlog(Blog blog);
+
+    AppUserResponseDto getUser(Long userId);
 }

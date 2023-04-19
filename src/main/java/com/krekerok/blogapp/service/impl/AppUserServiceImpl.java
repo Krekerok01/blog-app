@@ -115,6 +115,11 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public AppUserResponseDto getUser(Long userId) {
+        return UserMapper.INSTANCE.toAppUserResponseDto(findAppUserByAppUserId(userId));
+    }
+
+    @Override
     public boolean deleteAppUserById(long id) {
         return appUserRepository.findById(id)
             .map(entity -> {
