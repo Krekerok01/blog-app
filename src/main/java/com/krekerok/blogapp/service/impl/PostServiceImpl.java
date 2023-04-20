@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -92,8 +93,25 @@ public class PostServiceImpl implements PostService {
         } else {
             throw new NoBlogIdMatchException("Invalid post id");
         }
+    }
 
+    @Override
+    @Transactional
+    public PostResponseDto updatePostImage(Long postId, MultipartFile imageFile, String jwt) {
+        Post post = getPostById(postId);
+        if (appUserService.checkingForDataCompliance(post.getBlog().getBlogId(), jwt)){
 
+            cloudinaryService.deleteFile(post.getImageURL());
+
+            String url =  cloudinaryService.uploadFile(imageFile);
+            post.setImageURL(url);
+            post.setModifiedAt(Instant.now());
+            Post updatedPost = postRepository.save(post);
+
+            return PostMapper.INSTANCE.toPostResponseDto(updatedPost);
+        } else {
+            throw new NoBlogIdMatchException("Invalid post id");
+        }
     }
 
     public Post getPostById(Long postId) {

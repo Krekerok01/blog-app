@@ -15,6 +15,7 @@ import java.time.Instant;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -111,6 +112,28 @@ public class PostController {
 
         return new ResponseEntity<>(postService.updatePostTextInfo(postId, postUpdateRequestDto, jwt), HttpStatus.OK);
 
+    }
+
+    @Operation(summary = "Updating a post image", description = "Updating a post(update only image)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successful request",
+            content = {
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostResponseDto.class))
+            }),
+        @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
+            content = @Content),
+        @ApiResponse(responseCode = "404", description = "Error: Post wasn't found in the database",
+            content = @Content)})
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PatchMapping(path = "/{postId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PostResponseDto> updatePostImage(@PathVariable Long postId,
+                        @RequestParam("imageFile") @NotNull MultipartFile imageFile,
+                        HttpServletRequest request){
+
+        String jwt = request.getHeader("Authorization").substring(7);
+        return new ResponseEntity<>(postService.updatePostImage(postId, imageFile, jwt), HttpStatus.OK);
     }
 
 }

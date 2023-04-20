@@ -5,6 +5,7 @@ import com.krekerok.blogapp.dto.requests.PostUpdateRequestDto;
 import com.krekerok.blogapp.dto.responses.PostResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 
 public interface PostService {
@@ -18,4 +19,6 @@ public interface PostService {
     List<PostResponseDto> getAllPostsByBlog(Blog blog);
 
     PostResponseDto updatePostTextInfo(Long postId, PostUpdateRequestDto postUpdateRequestDto, String jwt);
+
+    PostResponseDto updatePostImage(Long postId, MultipartFile imageFile, String jwt);
 }
