@@ -3,6 +3,7 @@ package com.krekerok.blogapp.service;
 import com.krekerok.blogapp.dto.requests.AppUserLoginRequestDto;
 import com.krekerok.blogapp.dto.responses.AppUserLoginResponseDto;
 import com.krekerok.blogapp.dto.responses.AppUserResponseDto;
+import com.krekerok.blogapp.dto.responses.AppUserRolesResponseDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.RedisUser;
@@ -29,4 +30,6 @@ public interface AppUserService {
     void deleteLinkToTheBlog(Blog blog);
 
     AppUserResponseDto getUser(Long userId);
+
+    AppUserRolesResponseDto addAdminRoleToTheAppUserByUserId(Long userId);
 }

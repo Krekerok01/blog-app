@@ -4,6 +4,7 @@ import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.notFound;
 
 import com.krekerok.blogapp.dto.responses.AppUserResponseDto;
+import com.krekerok.blogapp.dto.responses.AppUserRolesResponseDto;
 import com.krekerok.blogapp.dto.responses.PostResponseDto;
 import com.krekerok.blogapp.service.AppUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,5 +69,24 @@ public class AppUserController {
         return appUserService.deleteAppUserById(id)
             ? noContent().build()
             : notFound().build();
+    }
+
+    @Operation(summary = "Adding an Admin role to the User", description = "Adding an Admin role to the User by id")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successful request",
+            content = {
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = AppUserRolesResponseDto.class))
+            }),
+        @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
+            content = @Content),
+        @ApiResponse(responseCode = "404", description = "Error: User wasn't found in the database",
+            content = @Content)})
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/{userId}/admin")
+    public ResponseEntity<AppUserRolesResponseDto> addAdminRoleToTheAppUser(@PathVariable Long userId){
+        return new ResponseEntity<>(appUserService.addAdminRoleToTheAppUserByUserId(userId), HttpStatus.OK);
     }
 }

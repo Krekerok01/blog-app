@@ -5,6 +5,7 @@ import com.krekerok.blogapp.configuration.user_details.UserDetailsImpl;
 import com.krekerok.blogapp.dto.requests.AppUserLoginRequestDto;
 import com.krekerok.blogapp.dto.responses.AppUserLoginResponseDto;
 import com.krekerok.blogapp.dto.responses.AppUserResponseDto;
+import com.krekerok.blogapp.dto.responses.AppUserRolesResponseDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.RedisUser;
@@ -25,6 +26,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AppUserServiceImpl implements AppUserService {
@@ -142,5 +144,21 @@ public class AppUserServiceImpl implements AppUserService {
         AppUser appUser = appUserRepository.findAppUserByBlog(blog);
         appUser.setBlog(null);
         appUserRepository.save(appUser);
+    }
+
+    @Override
+    @Transactional
+    public AppUserRolesResponseDto addAdminRoleToTheAppUserByUserId(Long userId) {
+        AppUser appUser = findAppUserByAppUserId(userId);
+        Role role = roleService.createRoleIfNotExist(RoleName.ADMIN);
+
+        Set<Role> roles = appUser.getRoles();
+        roles.add(role);
+
+        appUserRepository.save(appUser);
+        return AppUserRolesResponseDto.builder()
+            .userId(userId)
+            .roles(roles)
+            .build();
     }
 }
