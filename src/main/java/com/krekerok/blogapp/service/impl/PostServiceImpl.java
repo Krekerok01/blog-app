@@ -1,12 +1,15 @@
 package com.krekerok.blogapp.service.impl;
 
 import com.krekerok.blogapp.dto.requests.PostRequestDto;
+import com.krekerok.blogapp.dto.requests.PostUpdateRequestDto;
 import com.krekerok.blogapp.dto.responses.PostResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
+import com.krekerok.blogapp.exception.NoBlogIdMatchException;
 import com.krekerok.blogapp.exception.PostNotFoundException;
 import com.krekerok.blogapp.mapper.PostMapper;
 import com.krekerok.blogapp.repository.PostRepository;
+import com.krekerok.blogapp.service.AppUserService;
 import com.krekerok.blogapp.service.BlogService;
 import com.krekerok.blogapp.service.CloudinaryService;
 import com.krekerok.blogapp.service.PostService;
@@ -26,6 +29,8 @@ public class PostServiceImpl implements PostService {
     private CloudinaryService cloudinaryService;
     @Autowired
     private BlogService blogService;
+    @Autowired
+    private AppUserService appUserService;
 
     @Transactional
     @Override
@@ -71,6 +76,24 @@ public class PostServiceImpl implements PostService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public PostResponseDto updatePostTextInfo(Long postId,
+        PostUpdateRequestDto postUpdateRequestDto, String jwt) {
+        Post post = getPostById(postId);
+        if (appUserService.checkingForDataCompliance(post.getBlog().getBlogId(), jwt)){
+            post.setHeader(postUpdateRequestDto.getHeader());
+            post.setText(postUpdateRequestDto.getText());
+            post.setModifiedAt(Instant.now());
+            Post updatedPost = postRepository.save(post);
+
+            return PostMapper.INSTANCE.toPostResponseDto(updatedPost);
+        } else {
+            throw new NoBlogIdMatchException("Invalid post id");
+        }
+
+
     }
 
     public Post getPostById(Long postId) {
