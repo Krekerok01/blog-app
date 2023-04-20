@@ -36,8 +36,12 @@ public class AppUserController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successful request",
             content = @Content),
+        @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
+            content = @Content),
         @ApiResponse(responseCode = "404", description = "Error: There are no users in the database",
             content = @Content)})
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<AppUserResponseDto>> getAllAppUsers(){
         return new ResponseEntity<>(appUserService.findAll(), HttpStatus.OK);
@@ -51,8 +55,12 @@ public class AppUserController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = AppUserResponseDto.class))
             }),
+        @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
+            content = @Content),
         @ApiResponse(responseCode = "404", description = "Error: User wasn't found in the database",
             content = @Content)})
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<AppUserResponseDto> getUser(@PathVariable Long userId) {
         return new ResponseEntity<>(appUserService.getUser(userId), HttpStatus.OK);
@@ -62,8 +70,12 @@ public class AppUserController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "No content if user was deleted from the database",
             content = @Content),
+        @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
+            content = @Content),
         @ApiResponse(responseCode = "404", description = "Error: User wasn't found in the database",
             content = @Content)})
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAppUser(@PathVariable long id) {
         return appUserService.deleteAppUserById(id)
@@ -84,7 +96,6 @@ public class AppUserController {
         @ApiResponse(responseCode = "404", description = "Error: User wasn't found in the database",
             content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")
-    @PreAuthorize("hasRole('USER')")
     @PatchMapping("/{userId}/admin")
     public ResponseEntity<AppUserRolesResponseDto> addAdminRoleToTheAppUser(@PathVariable Long userId){
         return new ResponseEntity<>(appUserService.addAdminRoleToTheAppUserByUserId(userId), HttpStatus.OK);
