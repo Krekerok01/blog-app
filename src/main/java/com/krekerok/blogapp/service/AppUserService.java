@@ -33,5 +33,6 @@ public interface AppUserService {
 
     AppUserRolesResponseDto addAdminRoleToTheAppUserByUserId(Long userId);
 
-    boolean existsByUserId(Long userId);
+    AppUser findAppUserByUsernameFromJWT(String jwt);
+
 }

@@ -165,7 +165,8 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public boolean existsByUserId(Long userId) {
-        return appUserRepository.existsById(userId);
+    public AppUser findAppUserByUsernameFromJWT(String jwt) {
+        return appUserRepository.findByUsername
+            (jwtUtils.getUserNameFromJwtToken(jwt)).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 }

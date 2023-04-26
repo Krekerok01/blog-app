@@ -1,12 +1,15 @@
 package com.krekerok.blogapp.service.impl;
 
+import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.PostLike;
+import com.krekerok.blogapp.exception.PostNotFoundException;
 import com.krekerok.blogapp.repository.PostLikeRepository;
 import com.krekerok.blogapp.service.AppUserService;
 import com.krekerok.blogapp.service.PostLikeService;
 import com.krekerok.blogapp.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PostLikeServiceImpl implements PostLikeService {
@@ -18,21 +21,27 @@ public class PostLikeServiceImpl implements PostLikeService {
     @Autowired
     private PostLikeRepository postLikeRepository;
 
+    @Transactional
     @Override
-    public boolean likeOrDislikePost(long appUserId, long postId) {
+    public boolean likeOrDislikePost(long postId, String jwt) {
 
-        if (appUserService.existsByUserId(appUserId) && postService.existsByPostId(postId)){
-            if (!postLikeRepository.existsByAppUserIdAndPostId(appUserId, postId)){
+        AppUser appUser = appUserService.findAppUserByUsernameFromJWT(jwt);
+
+        if (postService.existsByPostId(postId)){
+            if (!postLikeRepository.existsByAppUserIdAndPostId(appUser.getUserId(), postId)){
                 PostLike postLike = PostLike.builder()
                         .postId(postId)
-                        .appUserId(appUserId)
+                        .appUserId(appUser.getUserId())
                         .build();
                 postLikeRepository.save(postLike);
                 return true;
+            } else {
+                postLikeRepository.deleteByAppUserIdAndPostId(appUser.getUserId(), postId);
+                return false;
             }
-            return false;
+
         }
-        throw new RuntimeException("Access exception");
+        throw new PostNotFoundException("Post not found");
     }
 
 }

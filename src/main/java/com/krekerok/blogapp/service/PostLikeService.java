@@ -2,6 +2,5 @@ package com.krekerok.blogapp.service;
 
 public interface PostLikeService {
 
-    boolean likeOrDislikePost(long appUserId, long postId);
-
+    boolean likeOrDislikePost(long postId, String jwt);
 }
