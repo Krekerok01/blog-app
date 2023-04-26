@@ -17,6 +17,7 @@ import com.krekerok.blogapp.mapper.UserMapper;
 import com.krekerok.blogapp.repository.AppUserRepository;
 import com.krekerok.blogapp.service.AppUserService;
 import com.krekerok.blogapp.service.RoleService;
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -80,6 +81,7 @@ public class AppUserServiceImpl implements AppUserService {
         Role role = roleService.createRoleIfNotExist(RoleName.USER);
 
         AppUser appUser = UserMapper.INSTANCE.toAppUser(redisUser);
+        appUser.setModifiedAt(Instant.now());
         appUser.setRoles(Set.of(role));
         return appUser;
     }
