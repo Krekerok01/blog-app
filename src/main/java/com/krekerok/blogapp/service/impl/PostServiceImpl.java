@@ -56,14 +56,14 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void deletePost(Long postId) {
-        Post post = getPostById(postId);
+        Post post = findPostByPostId(postId);
         cloudinaryService.deleteFile(post.getImageURL());
         postRepository.delete(post);
     }
 
     @Override
     public PostResponseDto getPost(Long postId) {
-        Post post = getPostById(postId);
+        Post post = findPostByPostId(postId);
         return PostMapper.INSTANCE.toPostResponseDto(post);
     }
 
@@ -82,7 +82,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDto updatePostTextInfo(Long postId,
         PostUpdateRequestDto postUpdateRequestDto, String jwt) {
-        Post post = getPostById(postId);
+        Post post = findPostByPostId(postId);
         if (appUserService.checkingForDataCompliance(post.getBlog().getBlogId(), jwt)){
             post.setHeader(postUpdateRequestDto.getHeader());
             post.setText(postUpdateRequestDto.getText());
@@ -98,7 +98,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public PostResponseDto updatePostImage(Long postId, MultipartFile imageFile, String jwt) {
-        Post post = getPostById(postId);
+        Post post = findPostByPostId(postId);
         if (appUserService.checkingForDataCompliance(post.getBlog().getBlogId(), jwt)){
 
             cloudinaryService.deleteFile(post.getImageURL());
@@ -114,8 +114,15 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    public Post getPostById(Long postId) {
+
+    @Override
+    public Post findPostByPostId(Long postId) {
         return postRepository.findById(postId)
             .orElseThrow(() -> new PostNotFoundException("Post not found"));
+    }
+
+    @Override
+    public boolean existsByPostId(Long postId) {
+        return postRepository.existsById(postId);
     }
 }

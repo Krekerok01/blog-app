@@ -163,4 +163,9 @@ public class AppUserServiceImpl implements AppUserService {
             .roles(roles)
             .build();
     }
+
+    @Override
+    public boolean existsByUserId(Long userId) {
+        return appUserRepository.existsById(userId);
+    }
 }

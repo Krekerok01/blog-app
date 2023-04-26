@@ -32,4 +32,6 @@ public interface AppUserService {
     AppUserResponseDto getUser(Long userId);
 
     AppUserRolesResponseDto addAdminRoleToTheAppUserByUserId(Long userId);
+
+    boolean existsByUserId(Long userId);
 }
