@@ -23,11 +23,11 @@ public class PostLikeController {
     @Autowired
     private PostLikeService postLikeService;
 
-    @Operation(summary = "Like or dislike the post", description = "Like or dislike the post by postId")
+    @Operation(summary = "Putting a like on a post", description = "Putting a like on a post by postId")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successful request: The post was liked",
             content = @Content),
-        @ApiResponse(responseCode = "204", description = "No content: The post was disliked",
+        @ApiResponse(responseCode = "204", description = "No content: The like was removed from the post",
             content = @Content),
         @ApiResponse(responseCode = "401", description = "Error: User wasn't authorized",
             content = @Content),
@@ -35,8 +35,8 @@ public class PostLikeController {
             content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/{postId}")
-    public ResponseEntity<?> likeOrDislikePost(@PathVariable Long postId, HttpServletRequest request) {
-        return postLikeService.likeOrDislikePost(postId, request.getHeader("Authorization").substring(7))
+    public ResponseEntity<?> likePost(@PathVariable Long postId, HttpServletRequest request) {
+        return postLikeService.putLikeOrRemoveItFromThePost(postId, request.getHeader("Authorization").substring(7))
             ? ok().build()
             : noContent().build();
     }

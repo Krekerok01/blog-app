@@ -23,7 +23,7 @@ public class PostLikeServiceImpl implements PostLikeService {
 
     @Transactional
     @Override
-    public boolean likeOrDislikePost(long postId, String jwt) {
+    public boolean putLikeOrRemoveItFromThePost(long postId, String jwt) {
 
         AppUser appUser = appUserService.findAppUserByUsernameFromJWT(jwt);
         Post post = postService.findPostByPostId(postId);
