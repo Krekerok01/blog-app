@@ -1,8 +1,8 @@
 package com.krekerok.blogapp.service.impl;
 
 import com.krekerok.blogapp.entity.AppUser;
+import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.entity.PostLike;
-import com.krekerok.blogapp.exception.PostNotFoundException;
 import com.krekerok.blogapp.repository.PostLikeRepository;
 import com.krekerok.blogapp.service.AppUserService;
 import com.krekerok.blogapp.service.PostLikeService;
@@ -26,22 +26,22 @@ public class PostLikeServiceImpl implements PostLikeService {
     public boolean likeOrDislikePost(long postId, String jwt) {
 
         AppUser appUser = appUserService.findAppUserByUsernameFromJWT(jwt);
+        Post post = postService.findPostByPostId(postId);
 
-        if (postService.existsByPostId(postId)){
-            if (!postLikeRepository.existsByAppUserIdAndPostId(appUser.getUserId(), postId)){
-                PostLike postLike = PostLike.builder()
-                        .postId(postId)
-                        .appUserId(appUser.getUserId())
-                        .build();
-                postLikeRepository.save(postLike);
-                return true;
-            } else {
-                postLikeRepository.deleteByAppUserIdAndPostId(appUser.getUserId(), postId);
-                return false;
-            }
-
+        if (!postLikeRepository.existsByAppUserIdAndPostId(appUser.getUserId(), post.getPostId())){
+            PostLike postLike = buildPostLike(post.getPostId(), appUser.getUserId());
+            postLikeRepository.save(postLike);
+            return true;
+        } else {
+            postLikeRepository.deleteByAppUserIdAndPostId(appUser.getUserId(), post.getPostId());
+            return false;
         }
-        throw new PostNotFoundException("Post not found");
     }
 
+    private PostLike buildPostLike(long postId, long appUserId) {
+        return PostLike.builder()
+            .postId(postId)
+            .appUserId(appUserId)
+            .build();
+    }
 }
