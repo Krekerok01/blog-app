@@ -145,6 +145,7 @@ public class AppUserServiceImpl implements AppUserService {
     public void deleteLinkToTheBlog(Blog blog) {
         AppUser appUser = appUserRepository.findAppUserByBlog(blog);
         appUser.setBlog(null);
+        appUser.setModifiedAt(Instant.now());
         appUserRepository.save(appUser);
     }
 
@@ -156,6 +157,7 @@ public class AppUserServiceImpl implements AppUserService {
 
         Set<Role> roles = appUser.getRoles();
         roles.add(role);
+        appUser.setModifiedAt(Instant.now());
 
         appUserRepository.save(appUser);
         return AppUserRolesResponseDto.builder()
