@@ -3,7 +3,7 @@ package com.krekerok.blogapp.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
@@ -53,7 +53,7 @@ class BlogServiceImplTest {
 
         doReturn(Optional.empty()).when(blogRepository).findById(anyLong());
 
-        Exception exception = assertThrows(BlogNotFoundException.class, () -> blogService.findBlogById(anyLong()));
+        Exception exception = assertThrowsExactly(BlogNotFoundException.class, () -> blogService.findBlogById(anyLong()));
 
         String expectedMessage = "Blog not found";
         String actualMessage = exception.getMessage();
