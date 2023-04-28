@@ -22,6 +22,7 @@ import com.krekerok.blogapp.entity.RoleName;
 import com.krekerok.blogapp.repository.AppUserRepository;
 import com.krekerok.blogapp.service.RoleService;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -54,10 +55,12 @@ class AppUserServiceImplTest {
         AppUser appUser = getAppUser(userRole);
 
         doReturn(userRole).when(roleService).createRoleIfNotExist(RoleName.USER);
+
         appUserService.createUser(redisUser);
 
         verify(appUserRepository).save(appUser);
     }
+
 
     private AppUser getAppUser(Role userRole) {
         return AppUser.builder()
@@ -65,6 +68,7 @@ class AppUserServiceImplTest {
             .password("passwordpassword")
             .email("test@gmail.com")
             .createdAt(Instant.now())
+            .modifiedAt(Instant.now())
             .roles(Set.of(userRole))
             .build();
     }
@@ -84,6 +88,7 @@ class AppUserServiceImplTest {
             .activationCode(UUID.randomUUID().toString())
             .timeOfSendingVerificationLink(Instant.now())
             .createdAt(Instant.now())
+            .modifiedAt(Instant.now())
             .build();
     }
 

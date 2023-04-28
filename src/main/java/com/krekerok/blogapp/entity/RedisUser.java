@@ -22,6 +22,8 @@ public class RedisUser implements Serializable {
 
     private Instant createdAt;
 
+    private Instant modifiedAt;
+
     private Instant timeOfSendingVerificationLink;
 
     private String activationCode;

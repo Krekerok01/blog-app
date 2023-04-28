@@ -15,10 +15,12 @@ public interface UserMapper {
     @Mapping(target = "blogId", source = "appUser.blog.blogId")
     AppUserResponseDto toAppUserResponseDto(AppUser appUser);
 
+
     AppUser toAppUser(RedisUser redisUser);
 
     @Mapping(target = "password", source = "password", ignore = true)
     @Mapping(target = "createdAt", expression = "java(java.time.Instant.now())")
+    @Mapping(target = "modifiedAt", expression = "java(java.time.Instant.now())")
     @Mapping(target = "timeOfSendingVerificationLink", expression = "java(java.time.Instant.now())")
     @Mapping(target = "activationCode", expression = "java(java.util.UUID.randomUUID().toString())")
     RedisUser toRedisUserWithoutPassword(AppUserRequestDto appUserRequestDto);

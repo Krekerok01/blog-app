@@ -81,7 +81,6 @@ public class AppUserServiceImpl implements AppUserService {
         Role role = roleService.createRoleIfNotExist(RoleName.USER);
 
         AppUser appUser = UserMapper.INSTANCE.toAppUser(redisUser);
-        appUser.setModifiedAt(Instant.now());
         appUser.setRoles(Set.of(role));
         return appUser;
     }
