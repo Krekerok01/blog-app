@@ -17,8 +17,11 @@ import com.krekerok.blogapp.dto.responses.PostResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.exception.NoPostIdMatchException;
+import com.krekerok.blogapp.mapper.PostMapper;
 import com.krekerok.blogapp.repository.PostRepository;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -119,6 +122,21 @@ class PostServiceImplTest {
 
         verify(cloudinaryService, times(1)).deleteFile(post.getImageURL());
         verify(postRepository, times(1)).delete(post);
+        verifyNoMoreInteractions(postRepository);
+    }
+
+    @Test
+    void testGetAllPostsByBlog(){
+        Blog blog = Blog.builder().blogId(1L).build();
+
+        List<Post> posts = List.of(buildPost(), buildPost(), buildPost());
+        doReturn(posts).when(postRepository).findAllByBlog(blog);
+
+        List<PostResponseDto> result = postService.getAllPostsByBlog(blog);
+
+        assertNotNull(result);
+        assertEquals(posts.size(), result.size());
+        verify(postRepository, times(1)).findAllByBlog(blog);
         verifyNoMoreInteractions(postRepository);
     }
 
