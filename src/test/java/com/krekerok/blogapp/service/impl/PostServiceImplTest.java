@@ -126,7 +126,7 @@ class PostServiceImplTest {
     }
 
     @Test
-    void testGetAllPostsByBlog(){
+    void testGetAllPostsByBlog_ShouldReturnFullList(){
         Blog blog = Blog.builder().blogId(1L).build();
 
         List<Post> posts = List.of(buildPost(), buildPost(), buildPost());
