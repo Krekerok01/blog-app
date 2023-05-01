@@ -18,17 +18,17 @@ import com.krekerok.blogapp.dto.responses.PostResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.exception.NoPostIdMatchException;
-import com.krekerok.blogapp.mapper.PostMapper;
 import com.krekerok.blogapp.repository.PostRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {
@@ -111,6 +111,53 @@ class PostServiceImplTest {
 
         assertTrue(actualMessage.contains(expectedMessage));
 
+        verifyNoMoreInteractions(postRepository);
+    }
+
+    @Test
+    void testUpdatePostImage_ShouldUpdatePost(){
+        String jwt = "valid_jwt";
+        Post post = buildPost();
+        String url = "new image url";
+
+        MultipartFile file = new MockMultipartFile("test.png", "test picture".getBytes());
+
+        doReturn(Optional.of(post)).when(postRepository).findById(1L);
+        doReturn(true).when(appUserService).checkingForDataCompliance(1L, jwt);
+        doReturn(url).when(cloudinaryService).uploadFile(file);
+        doReturn(post).when(postRepository).save(post);
+
+        PostResponseDto responseDto = postService.updatePostImage(1L, file, jwt);
+
+        assertNotNull(responseDto);
+        assertEquals(responseDto.getImageURL(), url);
+        assertEquals(responseDto.getImageURL(), post.getImageURL());
+        assertEquals(responseDto.getPostId(), post.getPostId());
+
+        verify(postRepository, times(1)).findById(1L);
+        verify(cloudinaryService, times(1)).uploadFile(file);
+        verify(postRepository, times(1)).save(post);
+        verifyNoMoreInteractions(postRepository);
+    }
+
+
+    @Test
+    void testUpdatePostImage_ShouldThrowException(){
+        String jwt = "valid_jwt";
+        Post post = buildPost();
+
+        doReturn(Optional.of(post)).when(postRepository).findById(1L);
+        doReturn(false).when(appUserService).checkingForDataCompliance(1L, jwt);
+
+        Exception exception = assertThrowsExactly(NoPostIdMatchException.class,
+            () -> postService.updatePostImage(1L, any(MultipartFile.class), jwt));
+
+        String expectedMessage = "Invalid post id";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+
+        verify(postRepository, times(1)).findById(1L);
         verifyNoMoreInteractions(postRepository);
     }
 
