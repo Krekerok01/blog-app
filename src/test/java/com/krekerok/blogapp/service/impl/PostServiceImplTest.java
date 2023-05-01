@@ -3,16 +3,23 @@ package com.krekerok.blogapp.service.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import com.krekerok.blogapp.dto.requests.PostUpdateRequestDto;
 import com.krekerok.blogapp.dto.responses.PostResponseDto;
+import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
+import com.krekerok.blogapp.exception.NoBlogIdMatchException;
+import com.krekerok.blogapp.mapper.PostMapper;
 import com.krekerok.blogapp.repository.PostRepository;
+import java.time.Instant;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +32,8 @@ class PostServiceImplTest {
 
     @Mock
     private PostRepository postRepository;
+    @Mock
+    private AppUserServiceImpl appUserService;
 
     @InjectMocks
     private PostServiceImpl postService;
@@ -56,5 +65,60 @@ class PostServiceImplTest {
         verify(postRepository, times(1)).existsById(anyLong());
         verifyNoMoreInteractions(postRepository);
     }
+
+    @Test
+    void testUpdatePostTextInfo(){
+
+        String jwt = "valid_jwt";
+        Blog blog = buildBlog();
+        Post post = buildPost(blog);
+
+        PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto("updated header", "updated text");
+
+        doReturn(Optional.of(post)).when(postRepository).findById(1L);
+        doReturn(true).when(appUserService).checkingForDataCompliance(blog.getBlogId(), jwt);
+        doReturn(post).when(postRepository).save(post);
+
+        PostResponseDto responseDto = postService.updatePostTextInfo(1L, postUpdateRequestDto, jwt);
+
+        assertEquals(postUpdateRequestDto.getHeader(), post.getHeader());
+        assertEquals(postUpdateRequestDto.getText(), post.getText());
+
+        assertEquals(postUpdateRequestDto.getHeader(), responseDto.getHeader());
+        assertEquals(postUpdateRequestDto.getText(), responseDto.getText());
+        verifyNoMoreInteractions(postRepository);
+
+    }
+
+    private Blog buildBlog() {
+        return Blog.builder().blogId(1L).build();
+    }
+
+    private Post buildPost(Blog blog){
+        return Post.builder()
+            .postId(1L)
+            .blog(blog)
+            .header("old header")
+            .text("old text")
+            .build();
+    }
+
+
+
+//    @Override
+//    public PostResponseDto updatePostTextInfo(Long postId,
+//        PostUpdateRequestDto postUpdateRequestDto, String jwt) {
+//        Post post = findPostByPostId(postId);
+//        if (appUserService.checkingForDataCompliance(post.getBlog().getBlogId(), jwt)){
+//            post.setHeader(postUpdateRequestDto.getHeader());
+//            post.setText(postUpdateRequestDto.getText());
+//            post.setModifiedAt(Instant.now());
+//            Post updatedPost = postRepository.save(post);
+//
+//            return PostMapper.INSTANCE.toPostResponseDto(updatedPost);
+//        } else {
+//            throw new NoBlogIdMatchException("Invalid post id");
+//        }
+//    }
 
 }
