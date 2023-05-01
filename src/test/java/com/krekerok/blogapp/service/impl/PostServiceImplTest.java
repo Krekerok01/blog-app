@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -17,12 +16,8 @@ import com.krekerok.blogapp.dto.requests.PostUpdateRequestDto;
 import com.krekerok.blogapp.dto.responses.PostResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
-import com.krekerok.blogapp.exception.BlogNotFoundException;
-import com.krekerok.blogapp.exception.NoBlogIdMatchException;
 import com.krekerok.blogapp.exception.NoPostIdMatchException;
-import com.krekerok.blogapp.mapper.PostMapper;
 import com.krekerok.blogapp.repository.PostRepository;
-import java.time.Instant;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,6 +32,8 @@ class PostServiceImplTest {
     private PostRepository postRepository;
     @Mock
     private AppUserServiceImpl appUserService;
+    @Mock
+    private CloudinaryServiceImpl cloudinaryService;
 
     @InjectMocks
     private PostServiceImpl postService;
@@ -72,13 +69,13 @@ class PostServiceImplTest {
     @Test
     void testUpdatePostTextInfo_ShouldUpdatePost(){
         String jwt = "valid_jwt";
-        Blog blog = buildBlog();
-        Post post = buildPost(blog);
+
+        Post post = buildPost();
 
         PostUpdateRequestDto postUpdateRequestDto = new PostUpdateRequestDto("updated header", "updated text");
 
         doReturn(Optional.of(post)).when(postRepository).findById(1L);
-        doReturn(true).when(appUserService).checkingForDataCompliance(blog.getBlogId(), jwt);
+        doReturn(true).when(appUserService).checkingForDataCompliance(1L, jwt);
         doReturn(post).when(postRepository).save(post);
 
         PostResponseDto responseDto = postService.updatePostTextInfo(1L, postUpdateRequestDto, jwt);
@@ -95,11 +92,11 @@ class PostServiceImplTest {
     @Test
     void testUpdatePostTextInfo_ShouldThrowException(){
         String jwt = "valid_jwt";
-        Blog blog = buildBlog();
-        Post post = buildPost(blog);
+
+        Post post = buildPost();
 
         doReturn(Optional.of(post)).when(postRepository).findById(1L);
-        doReturn(false).when(appUserService).checkingForDataCompliance(blog.getBlogId(), jwt);
+        doReturn(false).when(appUserService).checkingForDataCompliance(1L, jwt);
 
         Exception exception = assertThrowsExactly(NoPostIdMatchException.class,
             () -> postService.updatePostTextInfo(1L, any(PostUpdateRequestDto.class), jwt));
@@ -112,16 +109,26 @@ class PostServiceImplTest {
         verifyNoMoreInteractions(postRepository);
     }
 
-    private Blog buildBlog() {
-        return Blog.builder().blogId(1L).build();
+    @Test
+    void testDeletePost(){
+        Post post = buildPost();
+
+        doReturn(Optional.of(post)).when(postRepository).findById(1L);
+
+        postService.deletePost(1L);
+
+        verify(cloudinaryService, times(1)).deleteFile(post.getImageURL());
+        verify(postRepository, times(1)).delete(post);
+        verifyNoMoreInteractions(postRepository);
     }
 
-    private Post buildPost(Blog blog){
+    private Post buildPost(){
         return Post.builder()
             .postId(1L)
-            .blog(blog)
+            .blog(Blog.builder().blogId(1L).build())
             .header("old header")
             .text("old text")
+            .imageURL("image url")
             .build();
     }
 }
