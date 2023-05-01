@@ -2,6 +2,7 @@ package com.krekerok.blogapp.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,6 +20,7 @@ import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.exception.NoPostIdMatchException;
 import com.krekerok.blogapp.mapper.PostMapper;
 import com.krekerok.blogapp.repository.PostRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -136,6 +138,20 @@ class PostServiceImplTest {
 
         assertNotNull(result);
         assertEquals(posts.size(), result.size());
+        verify(postRepository, times(1)).findAllByBlog(blog);
+        verifyNoMoreInteractions(postRepository);
+    }
+
+    @Test
+    void testGetAllPostsByBlog_ShouldReturnNull(){
+        Blog blog = Blog.builder().blogId(1L).build();
+        List<Post> posts = new ArrayList<>();
+
+        doReturn(posts).when(postRepository).findAllByBlog(blog);
+
+        List<PostResponseDto> result = postService.getAllPostsByBlog(blog);
+
+        assertNull(result);
         verify(postRepository, times(1)).findAllByBlog(blog);
         verifyNoMoreInteractions(postRepository);
     }
