@@ -19,7 +19,8 @@ public class ApplicationExceptionHandler {
         BlogExistsException.class,
         FileUploadException.class,
         FileDeletionException.class,
-        NoBlogIdMatchException.class})
+        NoBlogIdMatchException.class,
+        NoPostIdMatchException.class})
     public ResponseEntity<ExceptionResponseDto> handleApplicationException(RuntimeException e) {
         return new ResponseEntity<>(
             new ExceptionResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value(),

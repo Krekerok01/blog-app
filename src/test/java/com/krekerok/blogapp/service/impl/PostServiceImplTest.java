@@ -19,6 +19,7 @@ import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.exception.BlogNotFoundException;
 import com.krekerok.blogapp.exception.NoBlogIdMatchException;
+import com.krekerok.blogapp.exception.NoPostIdMatchException;
 import com.krekerok.blogapp.mapper.PostMapper;
 import com.krekerok.blogapp.repository.PostRepository;
 import java.time.Instant;
@@ -100,7 +101,7 @@ class PostServiceImplTest {
         doReturn(Optional.of(post)).when(postRepository).findById(1L);
         doReturn(false).when(appUserService).checkingForDataCompliance(blog.getBlogId(), jwt);
 
-        Exception exception = assertThrowsExactly(NoBlogIdMatchException.class,
+        Exception exception = assertThrowsExactly(NoPostIdMatchException.class,
             () -> postService.updatePostTextInfo(1L, any(PostUpdateRequestDto.class), jwt));
 
         String expectedMessage = "Invalid post id";
