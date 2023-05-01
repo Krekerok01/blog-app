@@ -2,6 +2,7 @@ package com.krekerok.blogapp.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -16,6 +17,7 @@ import com.krekerok.blogapp.dto.requests.PostUpdateRequestDto;
 import com.krekerok.blogapp.dto.responses.PostResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
+import com.krekerok.blogapp.exception.BlogNotFoundException;
 import com.krekerok.blogapp.exception.NoBlogIdMatchException;
 import com.krekerok.blogapp.mapper.PostMapper;
 import com.krekerok.blogapp.repository.PostRepository;
@@ -67,8 +69,7 @@ class PostServiceImplTest {
     }
 
     @Test
-    void testUpdatePostTextInfo(){
-
+    void testUpdatePostTextInfo_ShouldUpdatePost(){
         String jwt = "valid_jwt";
         Blog blog = buildBlog();
         Post post = buildPost(blog);
@@ -90,6 +91,26 @@ class PostServiceImplTest {
 
     }
 
+    @Test
+    void testUpdatePostTextInfo_ShouldThrowException(){
+        String jwt = "valid_jwt";
+        Blog blog = buildBlog();
+        Post post = buildPost(blog);
+
+        doReturn(Optional.of(post)).when(postRepository).findById(1L);
+        doReturn(false).when(appUserService).checkingForDataCompliance(blog.getBlogId(), jwt);
+
+        Exception exception = assertThrowsExactly(NoBlogIdMatchException.class,
+            () -> postService.updatePostTextInfo(1L, any(PostUpdateRequestDto.class), jwt));
+
+        String expectedMessage = "Invalid post id";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+
+        verifyNoMoreInteractions(postRepository);
+    }
+
     private Blog buildBlog() {
         return Blog.builder().blogId(1L).build();
     }
@@ -102,23 +123,4 @@ class PostServiceImplTest {
             .text("old text")
             .build();
     }
-
-
-
-//    @Override
-//    public PostResponseDto updatePostTextInfo(Long postId,
-//        PostUpdateRequestDto postUpdateRequestDto, String jwt) {
-//        Post post = findPostByPostId(postId);
-//        if (appUserService.checkingForDataCompliance(post.getBlog().getBlogId(), jwt)){
-//            post.setHeader(postUpdateRequestDto.getHeader());
-//            post.setText(postUpdateRequestDto.getText());
-//            post.setModifiedAt(Instant.now());
-//            Post updatedPost = postRepository.save(post);
-//
-//            return PostMapper.INSTANCE.toPostResponseDto(updatedPost);
-//        } else {
-//            throw new NoBlogIdMatchException("Invalid post id");
-//        }
-//    }
-
 }
