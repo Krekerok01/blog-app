@@ -1,6 +1,7 @@
 package com.krekerok.blogapp.entity;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -52,4 +53,7 @@ public class Post {
 
     @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL)
     private List<PostLike> likes;
+
+    @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL)
+    private List<PostComment> comments;
 }
