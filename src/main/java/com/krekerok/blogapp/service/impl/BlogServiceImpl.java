@@ -9,7 +9,6 @@ import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.exception.BlogExistsException;
 import com.krekerok.blogapp.exception.BlogNotFoundException;
 import com.krekerok.blogapp.exception.ForbiddingException;
-import com.krekerok.blogapp.exception.NoBlogIdMatchException;
 import com.krekerok.blogapp.mapper.BlogMapper;
 import com.krekerok.blogapp.repository.BlogRepository;
 import com.krekerok.blogapp.service.AppUserService;

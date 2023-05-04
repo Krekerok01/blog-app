@@ -6,8 +6,6 @@ import com.krekerok.blogapp.dto.responses.PostResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.exception.ForbiddingException;
-import com.krekerok.blogapp.exception.NoBlogIdMatchException;
-import com.krekerok.blogapp.exception.NoPostIdMatchException;
 import com.krekerok.blogapp.exception.PostNotFoundException;
 import com.krekerok.blogapp.mapper.PostMapper;
 import com.krekerok.blogapp.repository.PostRepository;
