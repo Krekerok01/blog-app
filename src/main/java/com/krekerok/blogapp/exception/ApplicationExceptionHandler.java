@@ -49,7 +49,7 @@ public class ApplicationExceptionHandler {
             HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @ExceptionHandler(CommentDeleteException.class)
+    @ExceptionHandler(ForbiddingException.class)
     public ResponseEntity<ExceptionResponseDto> handleForbiddingExceptions(RuntimeException e) {
         return new ResponseEntity<>(
             new ExceptionResponseDto(e.getMessage(), HttpStatus.FORBIDDEN.value(),
