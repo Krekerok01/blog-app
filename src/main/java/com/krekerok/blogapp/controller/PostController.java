@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -81,8 +82,8 @@ public class PostController {
             content = @Content)})
     @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping("/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    public ResponseEntity<?> deletePost(@PathVariable Long postId, HttpServletRequest request) {
+        postService.deletePost(postId, request.getHeader("Authorization").substring(7));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

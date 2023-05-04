@@ -13,7 +13,7 @@ public interface PostService {
 
     PostResponseDto createPost(Long blogId, PostRequestDto postRequestDto);
 
-    void deletePost(Long postId);
+    void deletePost(Long postId, String jwt);
 
     PostResponseDto getPost(Long postId);
 

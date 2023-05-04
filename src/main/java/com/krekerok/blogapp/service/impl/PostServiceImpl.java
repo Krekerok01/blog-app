@@ -55,10 +55,14 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, String jwt) {
         Post post = findPostByPostId(postId);
-        cloudinaryService.deleteFile(post.getImageURL());
-        postRepository.delete(post);
+        if (appUserService.checkingForDataCompliance(post.getBlog().getBlogId(), jwt)) {
+            cloudinaryService.deleteFile(post.getImageURL());
+            postRepository.delete(post);
+        } else {
+            throw new ForbiddingException("The user can update only his post.");
+        }
     }
 
     @Override

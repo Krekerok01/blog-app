@@ -164,10 +164,12 @@ class PostServiceImplTest {
     @Test
     void testDeletePost(){
         Post post = buildPost();
+        String jwt = "valid jwt";
 
         doReturn(Optional.of(post)).when(postRepository).findById(1L);
+        doReturn(true).when(appUserService).checkingForDataCompliance(1L, jwt);
 
-        postService.deletePost(1L);
+        postService.deletePost(1L, jwt);
 
         verify(cloudinaryService, times(1)).deleteFile(post.getImageURL());
         verify(postRepository, times(1)).delete(post);
