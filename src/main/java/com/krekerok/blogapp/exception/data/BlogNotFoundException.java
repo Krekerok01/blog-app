@@ -1,4 +1,4 @@
-package com.krekerok.blogapp.exception;
+package com.krekerok.blogapp.exception.data;
 
 public class BlogNotFoundException extends RuntimeException{
 

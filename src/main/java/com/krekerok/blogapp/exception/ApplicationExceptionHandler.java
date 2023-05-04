@@ -2,6 +2,16 @@ package com.krekerok.blogapp.exception;
 
 
 import com.krekerok.blogapp.dto.responses.ExceptionResponseDto;
+import com.krekerok.blogapp.exception.cloud.FileDeletionException;
+import com.krekerok.blogapp.exception.cloud.FileUploadException;
+import com.krekerok.blogapp.exception.data.PostCommentNotFoundException;
+import com.krekerok.blogapp.exception.data.ActivationCodeNotFoundException;
+import com.krekerok.blogapp.exception.data.BlogExistsException;
+import com.krekerok.blogapp.exception.data.BlogNotFoundException;
+import com.krekerok.blogapp.exception.data.FieldExistsException;
+import com.krekerok.blogapp.exception.data.PostNotFoundException;
+import com.krekerok.blogapp.exception.data.UserNotFoundException;
+import com.krekerok.blogapp.exception.sucurity.ForbiddingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -39,13 +49,6 @@ public class ApplicationExceptionHandler {
             HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(EmailVerifiedException.class)
-    public ResponseEntity<ExceptionResponseDto> handleEmailVerifiedException(EmailVerifiedException e) {
-        return new ResponseEntity<>(
-            new ExceptionResponseDto(e.getMessage(), HttpStatus.NOT_ACCEPTABLE.value(),
-                HttpStatus.NOT_ACCEPTABLE.getReasonPhrase()),
-            HttpStatus.NOT_ACCEPTABLE);
-    }
 
     @ExceptionHandler(ForbiddingException.class)
     public ResponseEntity<ExceptionResponseDto> handleForbiddingExceptions(RuntimeException e) {

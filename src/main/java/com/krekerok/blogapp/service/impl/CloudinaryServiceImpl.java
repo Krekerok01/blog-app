@@ -2,10 +2,9 @@ package com.krekerok.blogapp.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.krekerok.blogapp.exception.FileDeletionException;
-import com.krekerok.blogapp.exception.FileUploadException;
+import com.krekerok.blogapp.exception.cloud.FileDeletionException;
+import com.krekerok.blogapp.exception.cloud.FileUploadException;
 import com.krekerok.blogapp.service.CloudinaryService;
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;

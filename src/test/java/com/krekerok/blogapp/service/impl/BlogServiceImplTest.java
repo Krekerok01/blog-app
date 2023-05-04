@@ -11,7 +11,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.krekerok.blogapp.entity.Blog;
-import com.krekerok.blogapp.exception.BlogNotFoundException;
+import com.krekerok.blogapp.exception.data.BlogNotFoundException;
 import com.krekerok.blogapp.repository.BlogRepository;
 import java.time.Instant;
 import java.util.Optional;

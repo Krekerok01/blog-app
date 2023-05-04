@@ -1,4 +1,4 @@
-package com.krekerok.blogapp.exception;
+package com.krekerok.blogapp.exception.sucurity;
 
 public class ForbiddingException extends RuntimeException{
 

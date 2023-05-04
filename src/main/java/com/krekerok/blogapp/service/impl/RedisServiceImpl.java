@@ -2,8 +2,8 @@ package com.krekerok.blogapp.service.impl;
 
 import com.krekerok.blogapp.dto.requests.AppUserRequestDto;
 import com.krekerok.blogapp.entity.RedisUser;
-import com.krekerok.blogapp.exception.ActivationCodeNotFoundException;
-import com.krekerok.blogapp.exception.FieldExistsException;
+import com.krekerok.blogapp.exception.data.ActivationCodeNotFoundException;
+import com.krekerok.blogapp.exception.data.FieldExistsException;
 import com.krekerok.blogapp.mapper.UserMapper;
 import com.krekerok.blogapp.service.AppUserService;
 import com.krekerok.blogapp.service.MailSenderService;

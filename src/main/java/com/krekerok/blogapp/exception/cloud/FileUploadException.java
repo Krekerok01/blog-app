@@ -1,4 +1,4 @@
-package com.krekerok.blogapp.exception;
+package com.krekerok.blogapp.exception.cloud;
 
 public class FileUploadException extends RuntimeException{
 
