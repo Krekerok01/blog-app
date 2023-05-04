@@ -8,6 +8,7 @@ import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.exception.BlogExistsException;
 import com.krekerok.blogapp.exception.BlogNotFoundException;
+import com.krekerok.blogapp.exception.ForbiddingException;
 import com.krekerok.blogapp.exception.NoBlogIdMatchException;
 import com.krekerok.blogapp.mapper.BlogMapper;
 import com.krekerok.blogapp.repository.BlogRepository;
@@ -61,7 +62,7 @@ public class BlogServiceImpl implements BlogService {
             appUserService.deleteLinkToTheBlog(blog);
             blogRepository.deleteById(id);
         } else {
-            throw new NoBlogIdMatchException("Invalid blog id");
+            throw new ForbiddingException("The user can delete only his blog.");
         }
     }
 
@@ -74,7 +75,7 @@ public class BlogServiceImpl implements BlogService {
             Blog updatedBlog = blogRepository.save(blog);
             return BlogMapper.INSTANCE.toBlogResponseDto(updatedBlog);
         } else {
-            throw new NoBlogIdMatchException("Invalid blog id");
+            throw new ForbiddingException("The user can update only his blog.");
         }
     }
 

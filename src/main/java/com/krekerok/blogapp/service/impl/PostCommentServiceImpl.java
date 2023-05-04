@@ -5,7 +5,7 @@ import com.krekerok.blogapp.dto.responses.CommentResponseDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.entity.PostComment;
-import com.krekerok.blogapp.exception.CommentDeleteException;
+import com.krekerok.blogapp.exception.ForbiddingException;
 import com.krekerok.blogapp.exception.PostCommentNotFoundException;
 import com.krekerok.blogapp.mapper.PostCommentMapper;
 import com.krekerok.blogapp.repository.PostCommentRepository;
@@ -49,12 +49,13 @@ public class PostCommentServiceImpl implements PostCommentService {
         if (postComment.getAppUserId().equals(appUser.getUserId())){
             postCommentRepository.delete(postComment);
         } else {
-            throw new CommentDeleteException("The user can delete only his comments.");
+            throw new ForbiddingException("The user can delete only his comments.");
         }
     }
 
     @Override
     public PostComment findPostCommentByCommentId(Long commentId) {
-        return postCommentRepository.findById(commentId).orElseThrow(() -> new PostCommentNotFoundException());
+        return postCommentRepository.findById(commentId)
+            .orElseThrow(() -> new PostCommentNotFoundException("Comment not found."));
     }
 }
