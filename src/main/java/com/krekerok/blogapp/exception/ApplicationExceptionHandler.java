@@ -48,6 +48,14 @@ public class ApplicationExceptionHandler {
             HttpStatus.NOT_ACCEPTABLE);
     }
 
+    @ExceptionHandler(CommentDeleteException.class)
+    public ResponseEntity<ExceptionResponseDto> handleForbiddingExceptions(RuntimeException e) {
+        return new ResponseEntity<>(
+            new ExceptionResponseDto(e.getMessage(), HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN.getReasonPhrase()),
+            HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponseDto> parameterExceptionHandler(
         MethodArgumentNotValidException e) {
@@ -85,5 +93,4 @@ public class ApplicationExceptionHandler {
                 HttpStatus.BAD_REQUEST.getReasonPhrase()),
             HttpStatus.BAD_REQUEST);
     }
-
 }

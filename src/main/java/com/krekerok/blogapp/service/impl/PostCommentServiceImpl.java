@@ -5,6 +5,7 @@ import com.krekerok.blogapp.dto.responses.CommentResponseDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.entity.PostComment;
+import com.krekerok.blogapp.exception.CommentDeleteException;
 import com.krekerok.blogapp.mapper.PostCommentMapper;
 import com.krekerok.blogapp.repository.PostCommentRepository;
 import com.krekerok.blogapp.service.AppUserService;
@@ -38,5 +39,16 @@ public class PostCommentServiceImpl implements PostCommentService {
             .build());
 
         return PostCommentMapper.INSTANCE.toCommentResponseDto(savedComment);
+    }
+
+    @Override
+    public void deleteComment(Long commentId, String jwt) {
+        PostComment postComment = postCommentRepository.findById(commentId).get();
+        AppUser appUser = appUserService.findAppUserByUsernameFromJWT(jwt);
+        if (postComment.getAppUserId().equals(appUser.getUserId())){
+            postCommentRepository.delete(postComment);
+        } else {
+            throw new CommentDeleteException("The user can delete only his comments.");
+        }
     }
 }
