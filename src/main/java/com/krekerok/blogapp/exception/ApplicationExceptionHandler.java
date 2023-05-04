@@ -32,7 +32,8 @@ public class ApplicationExceptionHandler {
         ActivationCodeNotFoundException.class,
         UserNotFoundException.class,
         BlogNotFoundException.class,
-        PostNotFoundException.class})
+        PostNotFoundException.class,
+        PostCommentNotFoundException.class})
     public ResponseEntity<ExceptionResponseDto> handleNotFoundException(RuntimeException e) {
         return new ResponseEntity<>(
             new ExceptionResponseDto(e.getMessage(), HttpStatus.NOT_FOUND.value(),
