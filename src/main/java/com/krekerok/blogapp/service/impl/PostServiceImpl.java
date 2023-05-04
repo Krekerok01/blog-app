@@ -5,6 +5,7 @@ import com.krekerok.blogapp.dto.requests.PostUpdateRequestDto;
 import com.krekerok.blogapp.dto.responses.PostResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
+import com.krekerok.blogapp.exception.ForbiddingException;
 import com.krekerok.blogapp.exception.NoBlogIdMatchException;
 import com.krekerok.blogapp.exception.NoPostIdMatchException;
 import com.krekerok.blogapp.exception.PostNotFoundException;
@@ -92,7 +93,7 @@ public class PostServiceImpl implements PostService {
 
             return PostMapper.INSTANCE.toPostResponseDto(updatedPost);
         } else {
-            throw new NoPostIdMatchException("Invalid post id");
+            throw new ForbiddingException("The user can update only his post.");
         }
     }
 
@@ -111,7 +112,7 @@ public class PostServiceImpl implements PostService {
 
             return PostMapper.INSTANCE.toPostResponseDto(updatedPost);
         } else {
-            throw new NoPostIdMatchException("Invalid post id");
+            throw new ForbiddingException("The user can update only his post.");
         }
     }
 

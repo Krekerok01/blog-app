@@ -17,6 +17,7 @@ import com.krekerok.blogapp.dto.requests.PostUpdateRequestDto;
 import com.krekerok.blogapp.dto.responses.PostResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
+import com.krekerok.blogapp.exception.ForbiddingException;
 import com.krekerok.blogapp.exception.NoPostIdMatchException;
 import com.krekerok.blogapp.repository.PostRepository;
 import java.util.ArrayList;
@@ -103,10 +104,10 @@ class PostServiceImplTest {
         doReturn(Optional.of(post)).when(postRepository).findById(1L);
         doReturn(false).when(appUserService).checkingForDataCompliance(1L, jwt);
 
-        Exception exception = assertThrowsExactly(NoPostIdMatchException.class,
+        Exception exception = assertThrowsExactly(ForbiddingException.class,
             () -> postService.updatePostTextInfo(1L, any(PostUpdateRequestDto.class), jwt));
 
-        String expectedMessage = "Invalid post id";
+        String expectedMessage = "The user can update only his post.";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
@@ -149,10 +150,10 @@ class PostServiceImplTest {
         doReturn(Optional.of(post)).when(postRepository).findById(1L);
         doReturn(false).when(appUserService).checkingForDataCompliance(1L, jwt);
 
-        Exception exception = assertThrowsExactly(NoPostIdMatchException.class,
+        Exception exception = assertThrowsExactly(ForbiddingException.class,
             () -> postService.updatePostImage(1L, any(MultipartFile.class), jwt));
 
-        String expectedMessage = "Invalid post id";
+        String expectedMessage = "The user can update only his post.";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
