@@ -1,9 +1,8 @@
 package com.krekerok.blogapp.controller;
 
-import com.krekerok.blogapp.dto.requests.PostRequestDto;
-import com.krekerok.blogapp.dto.requests.PostUpdateRequestDto;
-import com.krekerok.blogapp.dto.responses.BlogResponseDto;
-import com.krekerok.blogapp.dto.responses.PostResponseDto;
+import com.krekerok.blogapp.dto.request.PostRequestDto;
+import com.krekerok.blogapp.dto.request.PostUpdateRequestDto;
+import com.krekerok.blogapp.dto.response.PostResponseDto;
 import com.krekerok.blogapp.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,12 +10,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import java.time.Instant;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

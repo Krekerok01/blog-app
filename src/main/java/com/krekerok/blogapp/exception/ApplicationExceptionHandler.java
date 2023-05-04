@@ -1,7 +1,7 @@
 package com.krekerok.blogapp.exception;
 
 
-import com.krekerok.blogapp.dto.responses.ExceptionResponseDto;
+import com.krekerok.blogapp.dto.response.ExceptionResponseDto;
 import com.krekerok.blogapp.exception.cloud.FileDeletionException;
 import com.krekerok.blogapp.exception.cloud.FileUploadException;
 import com.krekerok.blogapp.exception.data.PostCommentNotFoundException;

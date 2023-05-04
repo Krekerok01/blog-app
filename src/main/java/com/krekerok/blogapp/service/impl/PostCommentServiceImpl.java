@@ -1,7 +1,7 @@
 package com.krekerok.blogapp.service.impl;
 
-import com.krekerok.blogapp.dto.requests.CommentRequestDto;
-import com.krekerok.blogapp.dto.responses.CommentResponseDto;
+import com.krekerok.blogapp.dto.request.CommentRequestDto;
+import com.krekerok.blogapp.dto.response.CommentResponseDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.entity.PostComment;

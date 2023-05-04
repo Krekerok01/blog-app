@@ -1,6 +1,6 @@
 package com.krekerok.blogapp.mapper;
 
-import com.krekerok.blogapp.dto.responses.PostResponseDto;
+import com.krekerok.blogapp.dto.response.PostResponseDto;
 import com.krekerok.blogapp.entity.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

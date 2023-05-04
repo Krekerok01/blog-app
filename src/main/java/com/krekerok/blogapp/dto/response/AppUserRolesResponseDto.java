@@ -1,4 +1,4 @@
-package com.krekerok.blogapp.dto.responses;
+package com.krekerok.blogapp.dto.response;
 
 import com.krekerok.blogapp.entity.Role;
 import java.util.Set;

@@ -1,8 +1,8 @@
 package com.krekerok.blogapp.service;
 
-import com.krekerok.blogapp.dto.requests.BlogRequestDto;
-import com.krekerok.blogapp.dto.responses.BlogAndPostsResponseDto;
-import com.krekerok.blogapp.dto.responses.BlogResponseDto;
+import com.krekerok.blogapp.dto.request.BlogRequestDto;
+import com.krekerok.blogapp.dto.response.BlogAndPostsResponseDto;
+import com.krekerok.blogapp.dto.response.BlogResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 
 public interface BlogService {

@@ -3,9 +3,8 @@ package com.krekerok.blogapp.controller;
 import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.notFound;
 
-import com.krekerok.blogapp.dto.responses.AppUserResponseDto;
-import com.krekerok.blogapp.dto.responses.AppUserRolesResponseDto;
-import com.krekerok.blogapp.dto.responses.PostResponseDto;
+import com.krekerok.blogapp.dto.response.AppUserResponseDto;
+import com.krekerok.blogapp.dto.response.AppUserRolesResponseDto;
 import com.krekerok.blogapp.service.AppUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

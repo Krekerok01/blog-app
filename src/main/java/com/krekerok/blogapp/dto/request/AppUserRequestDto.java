@@ -1,4 +1,4 @@
-package com.krekerok.blogapp.dto.requests;
+package com.krekerok.blogapp.dto.request;
 
 
 import com.krekerok.blogapp.validation.PasswordEquality;

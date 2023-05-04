@@ -13,8 +13,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import com.krekerok.blogapp.dto.requests.PostUpdateRequestDto;
-import com.krekerok.blogapp.dto.responses.PostResponseDto;
+import com.krekerok.blogapp.dto.request.PostUpdateRequestDto;
+import com.krekerok.blogapp.dto.response.PostResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.exception.sucurity.ForbiddingException;

@@ -1,7 +1,7 @@
 package com.krekerok.blogapp.controller;
 
-import com.krekerok.blogapp.dto.requests.CommentRequestDto;
-import com.krekerok.blogapp.dto.responses.CommentResponseDto;
+import com.krekerok.blogapp.dto.request.CommentRequestDto;
+import com.krekerok.blogapp.dto.response.CommentResponseDto;
 import com.krekerok.blogapp.service.PostCommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -1,4 +1,4 @@
-package com.krekerok.blogapp.dto.requests;
+package com.krekerok.blogapp.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

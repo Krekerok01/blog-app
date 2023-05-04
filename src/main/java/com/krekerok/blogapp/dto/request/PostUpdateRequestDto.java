@@ -1,4 +1,4 @@
-package com.krekerok.blogapp.dto.requests;
+package com.krekerok.blogapp.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

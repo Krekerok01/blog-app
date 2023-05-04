@@ -1,8 +1,6 @@
-package com.krekerok.blogapp.dto.responses;
+package com.krekerok.blogapp.dto.response;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.Value;
 
 @Value

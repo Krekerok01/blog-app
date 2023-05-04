@@ -1,4 +1,4 @@
-package com.krekerok.blogapp.dto.responses;
+package com.krekerok.blogapp.dto.response;
 
 
 import java.time.Instant;

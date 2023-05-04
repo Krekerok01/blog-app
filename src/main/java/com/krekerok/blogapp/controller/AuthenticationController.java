@@ -2,8 +2,8 @@ package com.krekerok.blogapp.controller;
 
 import static org.springframework.http.ResponseEntity.ok;
 
-import com.krekerok.blogapp.dto.requests.AppUserLoginRequestDto;
-import com.krekerok.blogapp.dto.responses.AppUserLoginResponseDto;
+import com.krekerok.blogapp.dto.request.AppUserLoginRequestDto;
+import com.krekerok.blogapp.dto.response.AppUserLoginResponseDto;
 import com.krekerok.blogapp.service.AppUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

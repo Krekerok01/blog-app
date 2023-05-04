@@ -1,7 +1,7 @@
 package com.krekerok.blogapp.mapper;
 
-import com.krekerok.blogapp.dto.requests.AppUserRequestDto;
-import com.krekerok.blogapp.dto.responses.AppUserResponseDto;
+import com.krekerok.blogapp.dto.request.AppUserRequestDto;
+import com.krekerok.blogapp.dto.response.AppUserResponseDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.RedisUser;
 import org.mapstruct.Mapper;

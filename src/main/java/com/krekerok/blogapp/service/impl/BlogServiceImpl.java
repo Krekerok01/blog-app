@@ -1,9 +1,9 @@
 package com.krekerok.blogapp.service.impl;
 
-import com.krekerok.blogapp.dto.requests.BlogRequestDto;
-import com.krekerok.blogapp.dto.responses.BlogAndPostsResponseDto;
-import com.krekerok.blogapp.dto.responses.BlogResponseDto;
-import com.krekerok.blogapp.dto.responses.PostResponseDto;
+import com.krekerok.blogapp.dto.request.BlogRequestDto;
+import com.krekerok.blogapp.dto.response.BlogAndPostsResponseDto;
+import com.krekerok.blogapp.dto.response.BlogResponseDto;
+import com.krekerok.blogapp.dto.response.PostResponseDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.exception.data.BlogExistsException;

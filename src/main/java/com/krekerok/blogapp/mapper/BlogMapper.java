@@ -1,7 +1,7 @@
 package com.krekerok.blogapp.mapper;
 
-import com.krekerok.blogapp.dto.requests.BlogRequestDto;
-import com.krekerok.blogapp.dto.responses.BlogResponseDto;
+import com.krekerok.blogapp.dto.request.BlogRequestDto;
+import com.krekerok.blogapp.dto.response.BlogResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

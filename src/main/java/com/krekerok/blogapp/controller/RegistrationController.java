@@ -1,6 +1,6 @@
 package com.krekerok.blogapp.controller;
 
-import com.krekerok.blogapp.dto.requests.AppUserRequestDto;
+import com.krekerok.blogapp.dto.request.AppUserRequestDto;
 import com.krekerok.blogapp.service.RedisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
