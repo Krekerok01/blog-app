@@ -16,6 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import com.krekerok.blogapp.configuration.jwt.JwtUtils;
+import com.krekerok.blogapp.dto.response.AppUserResponseDto;
 import com.krekerok.blogapp.entity.AppUser;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.RedisUser;
@@ -23,6 +24,7 @@ import com.krekerok.blogapp.entity.Role;
 import com.krekerok.blogapp.entity.RoleName;
 import com.krekerok.blogapp.exception.data.FieldExistsException;
 import com.krekerok.blogapp.exception.data.UserNotFoundException;
+import com.krekerok.blogapp.mapper.UserMapper;
 import com.krekerok.blogapp.repository.AppUserRepository;
 import com.krekerok.blogapp.service.RoleService;
 import java.time.Instant;
@@ -314,6 +316,30 @@ class AppUserServiceImplTest {
         assertNotNull(result);
         assertEquals(expectedMessage, result.getMessage());
         verify(appUserRepository, times(1)).findById(appUserId);
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+    @Test
+    void testGetUser(){
+        Long userId = 1L;
+
+        AppUser appUser = AppUser.builder()
+            .userId(userId)
+            .username("username")
+            .email("test@gmail.com")
+            .createdAt(Instant.now())
+            .modifiedAt(Instant.now())
+            .blog(Blog.builder().blogId(1L).build())
+            .build();
+
+        doReturn(Optional.of(appUser)).when(appUserRepository).findById(userId);
+
+        AppUserResponseDto resultResponse = appUserService.getUser(userId);
+
+        assertNotNull(resultResponse);
+        assertEquals(resultResponse.getUserId(), appUser.getUserId());
+        assertEquals(resultResponse.getBlogId(), appUser.getBlog().getBlogId());
+        verify(appUserRepository, times(1)).findById(userId);
         verifyNoMoreInteractions(appUserRepository);
     }
 }
