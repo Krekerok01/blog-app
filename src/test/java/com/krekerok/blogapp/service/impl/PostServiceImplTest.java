@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -28,6 +29,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
@@ -162,7 +164,7 @@ class PostServiceImplTest {
     }
 
     @Test
-    void testDeletePost(){
+    void testDeletePost_ShouldDeletePost(){
         Post post = buildPost();
         String jwt = "valid jwt";
 
@@ -173,6 +175,25 @@ class PostServiceImplTest {
 
         verify(cloudinaryService, times(1)).deleteFile(post.getImageURL());
         verify(postRepository, times(1)).delete(post);
+        verifyNoMoreInteractions(postRepository);
+    }
+
+    @Test
+    void testDeletePost_ShouldThrowForbiddingException(){
+        Post post = buildPost();
+        String jwt = "valid jwt";
+
+        doReturn(Optional.of(post)).when(postRepository).findById(1L);
+        doReturn(false).when(appUserService).checkingForDataCompliance(1L, jwt);
+
+        Exception exception = assertThrowsExactly(ForbiddingException.class,
+            () -> postService.deletePost(1L, jwt));
+
+        String expectedMessage = "The user can update only his post.";
+
+        assertNotNull(exception);
+        assertEquals(expectedMessage, exception.getMessage());
+        verify(postRepository, times(1)).findById(1L);
         verifyNoMoreInteractions(postRepository);
     }
 
