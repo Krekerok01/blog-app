@@ -20,6 +20,9 @@ import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.exception.sucurity.ForbiddingException;
 import com.krekerok.blogapp.repository.PostRepository;
+import com.krekerok.blogapp.service.AppUserService;
+import com.krekerok.blogapp.service.BlogService;
+import com.krekerok.blogapp.service.CloudinaryService;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +41,11 @@ class PostServiceImplTest {
     @Mock
     private PostRepository postRepository;
     @Mock
-    private AppUserServiceImpl appUserService;
+    private AppUserService appUserService;
     @Mock
-    private CloudinaryServiceImpl cloudinaryService;
+    private CloudinaryService cloudinaryService;
     @Mock
-    private BlogServiceImpl blogService;
+    private BlogService blogService;
 
     @InjectMocks
     private PostServiceImpl postService;
