@@ -4,6 +4,8 @@ package com.krekerok.blogapp.service.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -22,6 +24,7 @@ import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.RedisUser;
 import com.krekerok.blogapp.entity.Role;
 import com.krekerok.blogapp.entity.RoleName;
+import com.krekerok.blogapp.exception.data.UserNotFoundException;
 import com.krekerok.blogapp.repository.AppUserRepository;
 import com.krekerok.blogapp.service.RoleService;
 import java.time.Instant;
@@ -196,6 +199,41 @@ class AppUserServiceImplTest {
         boolean result = appUserService.checkingForDataCompliance(blogId, jwt);
 
         assertFalse(result);
+        verify(appUserRepository, times(1)).findByUsername(username);
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+    @Test
+    void testFindAppUserByUsernameFromJWT_ShouldReturnAppUser(){
+        String jwt = "valid jwt";
+        String username = "username";
+
+        AppUser expected = AppUser.builder().userId(1L).build();
+        doReturn(username).when(jwtUtils).getUserNameFromJwtToken(jwt);
+        doReturn(Optional.of(expected)).when(appUserRepository).findByUsername(username);
+
+        AppUser result = appUserService.findAppUserByUsernameFromJWT(jwt);
+
+        assertNotNull(result);
+        assertEquals(expected, result);
+        verify(appUserRepository, times(1)).findByUsername(username);
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+    @Test
+    void testFindAppUserByUsernameFromJWT_ShouldThrowUserNotFoundException(){
+        String jwt = "valid jwt";
+        String username = "username";
+        String expectedMessage = "User not found";
+
+        doReturn(username).when(jwtUtils).getUserNameFromJwtToken(jwt);
+        doReturn(Optional.empty()).when(appUserRepository).findByUsername(username);
+
+        Exception result = assertThrowsExactly(UserNotFoundException.class,
+            () -> appUserService.findAppUserByUsernameFromJWT(jwt));
+
+        assertNotNull(result);
+        assertEquals(expectedMessage, result.getMessage());
         verify(appUserRepository, times(1)).findByUsername(username);
         verifyNoMoreInteractions(appUserRepository);
     }
