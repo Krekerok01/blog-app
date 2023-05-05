@@ -8,18 +8,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import com.krekerok.blogapp.dto.request.PostRequestDto;
 import com.krekerok.blogapp.dto.request.PostUpdateRequestDto;
 import com.krekerok.blogapp.dto.response.PostResponseDto;
 import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.Post;
 import com.krekerok.blogapp.exception.sucurity.ForbiddingException;
 import com.krekerok.blogapp.repository.PostRepository;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,9 +41,35 @@ class PostServiceImplTest {
     private AppUserServiceImpl appUserService;
     @Mock
     private CloudinaryServiceImpl cloudinaryService;
+    @Mock
+    private BlogServiceImpl blogService;
 
     @InjectMocks
     private PostServiceImpl postService;
+
+    @Test
+    void testCreatePost(){
+        Blog blog = Blog.builder().blogId(1L).build();
+        MockMultipartFile file = new MockMultipartFile("test.png", "test picture".getBytes());
+        PostRequestDto postRequestDto = new PostRequestDto(file, "header", "text");
+
+        Post post = buildPost();
+
+        doReturn(blog).when(blogService).findBlogById(1L);
+        doReturn("image url").when(cloudinaryService).uploadFile(file);
+        doReturn(post).when(postRepository).save(any(Post.class));
+
+
+        PostResponseDto postResponseDto = postService.createPost(1L, postRequestDto);
+
+        assertNotNull(postResponseDto);
+        assertEquals(postResponseDto.getHeader(), postRequestDto.getHeader());
+        assertEquals(postResponseDto.getText(), postRequestDto.getText());
+        assertEquals(postResponseDto.getCreatedAt(), post.getCreatedAt());
+        verify(postRepository, times(1)).save(any(Post.class));
+        verifyNoMoreInteractions(postRepository);
+    }
+
 
     @Test
     void testGetPost(){
@@ -230,9 +256,11 @@ class PostServiceImplTest {
         return Post.builder()
             .postId(1L)
             .blog(Blog.builder().blogId(1L).build())
-            .header("old header")
-            .text("old text")
+            .header("header")
+            .text("text")
             .imageURL("image url")
+            .modifiedAt(Instant.now())
+            .createdAt(Instant.now())
             .build();
     }
 }
