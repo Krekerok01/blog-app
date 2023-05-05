@@ -24,6 +24,7 @@ import com.krekerok.blogapp.entity.Blog;
 import com.krekerok.blogapp.entity.RedisUser;
 import com.krekerok.blogapp.entity.Role;
 import com.krekerok.blogapp.entity.RoleName;
+import com.krekerok.blogapp.exception.data.FieldExistsException;
 import com.krekerok.blogapp.exception.data.UserNotFoundException;
 import com.krekerok.blogapp.repository.AppUserRepository;
 import com.krekerok.blogapp.service.RoleService;
@@ -237,4 +238,71 @@ class AppUserServiceImplTest {
         verify(appUserRepository, times(1)).findByUsername(username);
         verifyNoMoreInteractions(appUserRepository);
     }
+
+    @Test
+    void testCheckingForExistenceInTheDatabase_ShouldDoNothing(){
+        String username = "username";
+        String email = "test@gmail.com";
+
+        doReturn(false).when(appUserRepository).existsByUsername(username);
+        doReturn(false).when(appUserRepository).existsByEmail(email);
+
+        appUserService.checkingForExistenceInTheDatabase(username, email);
+
+        verify(appUserRepository, times(1)).existsByUsername(username);
+        verify(appUserRepository, times(1)).existsByEmail(email);
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+    @Test
+    void testCheckingForExistenceInTheDatabase_ShouldTrowFieldExistsExceptionBecauseOfUsername(){
+        String username = "username";
+        String expectedMessage = "Error: Username already exists";
+
+        doReturn(true).when(appUserRepository).existsByUsername(username);
+
+        Exception result = assertThrowsExactly(FieldExistsException.class,
+            () -> appUserService.checkingForExistenceInTheDatabase(username, anyString()));
+
+        assertNotNull(result);
+        assertEquals(expectedMessage, result.getMessage());
+        verify(appUserRepository, times(1)).existsByUsername(username);
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+    @Test
+    void testCheckingForExistenceInTheDatabase_ShouldTrowFieldExistsExceptionBecauseOfEmail(){
+        String username = "username";
+        String email = "test@gmail.com";
+        String expectedMessage = "Error: Email already exists";
+
+        doReturn(false).when(appUserRepository).existsByUsername(username);
+        doReturn(true).when(appUserRepository).existsByEmail(email);
+
+        Exception result = assertThrowsExactly(FieldExistsException.class,
+            () -> appUserService.checkingForExistenceInTheDatabase(username, email));
+
+        assertNotNull(result);
+        assertEquals(expectedMessage, result.getMessage());
+        verify(appUserRepository, times(1)).existsByUsername(username);
+        verify(appUserRepository, times(1)).existsByEmail(email);
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+
+
+
+//    @Override
+//    public void checkingForExistenceInTheDatabase(String username, String email) {
+//        if (appUserRepository.existsByUsername(username)) {
+//            throw new FieldExistsException("Error: Username already exists");
+//        } else if (appUserRepository.existsByEmail(email)) {
+//            throw new FieldExistsException("Error: Email already exists");
+//        }
+//    }
+//
+//    @Override
+//    public AppUser findAppUserByAppUserId(Long appUserId) {
+//        return appUserRepository.findById(appUserId).orElseThrow(() -> new UserNotFoundException("User not found"));
+//    }
 }
