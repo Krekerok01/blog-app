@@ -3,7 +3,6 @@ package com.krekerok.blogapp.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,9 +13,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
 import com.krekerok.blogapp.configuration.jwt.JwtUtils;
 import com.krekerok.blogapp.entity.AppUser;
@@ -29,7 +26,6 @@ import com.krekerok.blogapp.exception.data.UserNotFoundException;
 import com.krekerok.blogapp.repository.AppUserRepository;
 import com.krekerok.blogapp.service.RoleService;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -290,19 +286,34 @@ class AppUserServiceImplTest {
     }
 
 
+    @Test
+    void testFindAppUserByAppUserId_ShouldReturnAppUser(){
+        Long appUserId = 1L;
 
+        AppUser expected = AppUser.builder().userId(1L).build();
+        doReturn(Optional.of(expected)).when(appUserRepository).findById(appUserId);
 
-//    @Override
-//    public void checkingForExistenceInTheDatabase(String username, String email) {
-//        if (appUserRepository.existsByUsername(username)) {
-//            throw new FieldExistsException("Error: Username already exists");
-//        } else if (appUserRepository.existsByEmail(email)) {
-//            throw new FieldExistsException("Error: Email already exists");
-//        }
-//    }
-//
-//    @Override
-//    public AppUser findAppUserByAppUserId(Long appUserId) {
-//        return appUserRepository.findById(appUserId).orElseThrow(() -> new UserNotFoundException("User not found"));
-//    }
+        AppUser result = appUserService.findAppUserByAppUserId(appUserId);
+
+        assertNotNull(result);
+        assertEquals(expected, result);
+        verify(appUserRepository, times(1)).findById(appUserId);
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+    @Test
+    void testFindAppUserByAppUserId_ShouldThrowUserNotFoundException(){
+        Long appUserId = 2L;
+        String expectedMessage = "User not found";
+
+        doReturn(Optional.empty()).when(appUserRepository).findById(appUserId);
+
+        Exception result = assertThrowsExactly(UserNotFoundException.class,
+            () -> appUserService.findAppUserByAppUserId(appUserId));
+
+        assertNotNull(result);
+        assertEquals(expectedMessage, result.getMessage());
+        verify(appUserRepository, times(1)).findById(appUserId);
+        verifyNoMoreInteractions(appUserRepository);
+    }
 }
