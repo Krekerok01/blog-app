@@ -6,11 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.krekerok.blogapp.configuration.jwt.JwtUtils;
@@ -153,4 +156,47 @@ class AppUserServiceImplTest {
         verify(appUserRepository).save(appUser);
     }
 
+    @Test
+    void testCheckingForDataCompliance_ShouldReturnTrue(){
+        Long blogId = 1L;
+        String jwt = "valid jwt";
+        String username = "username";
+
+        AppUser appUser = AppUser.builder()
+            .userId(1L)
+            .blog(Blog.builder().blogId(1L).build())
+            .build();
+
+
+        doReturn(username).when(jwtUtils).getUserNameFromJwtToken(jwt);
+        doReturn(Optional.of(appUser)).when(appUserRepository).findByUsername(username);
+
+        boolean result = appUserService.checkingForDataCompliance(blogId, jwt);
+
+        assertTrue(result);
+        verify(appUserRepository, times(1)).findByUsername(username);
+        verifyNoMoreInteractions(appUserRepository);
+    }
+
+    @Test
+    void testCheckingForDataCompliance_ShouldReturnFalse(){
+        Long blogId = 2L;
+        String jwt = "valid jwt";
+        String username = "username";
+
+        AppUser appUser = AppUser.builder()
+            .userId(1L)
+            .blog(Blog.builder().blogId(1L).build())
+            .build();
+
+
+        doReturn(username).when(jwtUtils).getUserNameFromJwtToken(jwt);
+        doReturn(Optional.of(appUser)).when(appUserRepository).findByUsername(username);
+
+        boolean result = appUserService.checkingForDataCompliance(blogId, jwt);
+
+        assertFalse(result);
+        verify(appUserRepository, times(1)).findByUsername(username);
+        verifyNoMoreInteractions(appUserRepository);
+    }
 }
